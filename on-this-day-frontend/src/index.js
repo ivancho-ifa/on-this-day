@@ -3,6 +3,11 @@ import ReactDOM from 'react-dom'
 
 import 'bootstrap/dist/css/bootstrap.min.css'
 
-import Article from './articles/Article';
+/** @todo Remove these when not testing individual components anymore */
+import Article from './articles/Article'
+import Navigation from './common/Navigation'
 
-ReactDOM.render(<Article />, document.getElementById('root'))
+ReactDOM.render(<div>
+	<Navigation />
+	<Article />
+</div>, document.getElementById('root'))
