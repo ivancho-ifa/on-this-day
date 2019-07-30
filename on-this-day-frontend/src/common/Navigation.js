@@ -1,9 +1,19 @@
 import React from 'react'
 
 import Button from 'react-bootstrap/Button'
-import Form from 'react-bootstrap/Form'
 import Nav from 'react-bootstrap/Nav'
 import Navbar from 'react-bootstrap/Navbar'
+
+import PopUpDialogManager from './utils/PopUpDialogManager'
+import SearchDialog from './utils/SearchDialog'
+
+
+/**
+ * Website navigation.
+ *
+ * @todo Add login, logout, etc.
+ * @todo Add ability to create an article.
+ */
 
 function Navigation() {
 	return (
@@ -13,9 +23,11 @@ function Navigation() {
 				<Nav.Item><Nav.Link href="#satelite">Satelite</Nav.Link></Nav.Item>
 				<Nav.Item><Nav.Link href="#about">About us</Nav.Link></Nav.Item>
 			</Nav>
-			<Form inline>
-				<Button variant="outline-primary">Search</Button>
-			</Form>
+			<PopUpDialogManager
+				showDialog={false}
+				activator={<Button variant="outline-primary">Search</Button>}
+				dialog={<SearchDialog />}
+			/>
 		</Navbar>
 	)
 }
