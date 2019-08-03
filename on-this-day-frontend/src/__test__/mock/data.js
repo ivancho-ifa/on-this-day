@@ -10,7 +10,7 @@ const articles = [
 			"Sed dolorem incidunt totam. Maxime enim vel. Odio distinctio sed tenetur iure doloribus harum. Debitis aut alias ea error veritatis. Cupiditate fuga tenetur eos."
 		],
 		author: "Monty Gaylord",
-		date: "Thu Aug 01 2019",
+		date: "2019-08-03",
 		rating: 1,
 		comments: [
 			"Adipisci omnis in voluptatem vel fugit cum autem.",
