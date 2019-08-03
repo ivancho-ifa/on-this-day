@@ -31,7 +31,11 @@ function Article(props) {
 						</Card.Header>
 
 						<Card.Body as="article">
-							{props.content.map(text => <Card.Text>{text}</Card.Text>)}
+							{props.content.map((text, index) => <Card.Text key={index}>{text}</Card.Text>)}
+
+							<footer className="footer text-muted text-right">
+								<small><address>By <a rel="author" href="#author">{props.author}</a> on <time dateTime={props.date}>{new Date(props.date).toLocaleDateString()}</time></address></small>
+							</footer>
 						</Card.Body>
 
 						<Card.Footer as="footer" className="text-right">
