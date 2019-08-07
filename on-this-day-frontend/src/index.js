@@ -14,16 +14,19 @@ ReactDOM.render(<React.Fragment>
 
 	<Navigation />
 
-	<Article
-		title={articles[0].title}
-		titleImageSrc={articles[0].titleImageSrc}
-		titleImageCaption={articles[0].titleImageCaption}
-		subtitle={articles[0].subtitle}
-		content={articles[0].content}
-		rating={articles[0].rating}
-		comments={articles[0].comments}
-		author={articles[0].author}
-		date={articles[0].date} />
+	{articles.map((article, index) =>
+		<Article
+			key              ={index}
+			title            ={article.title}
+			titleImageSrc    ={article.titleImageSrc}
+			titleImageCaption={article.titleImageCaption}
+			subtitle         ={article.subtitle}
+			content          ={article.content}
+			rating           ={article.rating}
+			comments         ={article.comments}
+			author           ={article.author}
+			date             ={article.date} />
+	)}
 
 	<Footer />
 </React.Fragment>, document.getElementById('root'))
