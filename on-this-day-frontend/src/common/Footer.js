@@ -1,14 +1,15 @@
 import React from 'react'
 
+import Navbar from 'react-bootstrap/Navbar'
 
-/**
- * @todo Make it stick to the bottom regardless the rest content height.
- */
 
 function Footer() {
-	return <footer className="footer p-3 text-center">
-		<span className="text-muted">Follow "On This Day" on <a href="https://www.facebook.com/natoziden681/">Facebook</a></span>
-	</footer>
+	return <Navbar
+		as="footer"
+		className="footer justify-content-center"
+		sticky="bottom">
+		<Navbar.Text>Follow "On This Day" on <a href="https://www.facebook.com/natoziden681/">Facebook</a></Navbar.Text>
+	</Navbar>
 }
 
 export default Footer
