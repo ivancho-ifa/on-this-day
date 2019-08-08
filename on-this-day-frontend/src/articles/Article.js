@@ -12,9 +12,16 @@ import * as Constants from '../common/utils/Constants'
 
 
 /**
+ * @fileOverview Implements component that renders article's info.
+ *
+ * @todo Add documentation.
+ */
+
+
+/**
  * Component for displaying article contents.
  *
- * @param {Col[]} [props.children] ELements to render. Elements should be react-bootstrap/Col.
+ * @param {Col[]} [props.children] - HTML elements to render. Preferred type is react-bootstrap/Col, should work with others.
  */
 
 function SingleColumnLayout(props) {
@@ -40,12 +47,20 @@ function SingleColumnLayout(props) {
 	</Container>
 }
 
+
 function Signature(props) {
 	return <address className="mb-0">
 		{/** @todo Split to two lines. */}
 		By <a rel="author" href="#author">{props.author}</a> on <time dateTime={props.date}>{new Date(props.date).toLocaleDateString()}</time>
 	</address>
 }
+
+
+/**
+ * Renders the information for an article.
+ *
+ * @todo Reviews list and article's content could be de-duplicated.
+ */
 
 function Article(props) {
 	return <SingleColumnLayout>
