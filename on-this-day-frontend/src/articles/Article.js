@@ -3,19 +3,19 @@ import React from 'react'
 import Card from 'react-bootstrap/Card'
 import Col from 'react-bootstrap/Col'
 import Container from 'react-bootstrap/Container'
-import Row from 'react-bootstrap/Row'
 import Figure from 'react-bootstrap/Figure'
+import Row from 'react-bootstrap/Row'
 
 import classNames from 'classnames'
 
 import * as Constants from '../common/utils/Constants'
 
-function Signature(props) {
-	return <address className="mb-0">
-		{/** @todo Split to two lines. */}
-		By <a rel="author" href="#author">{props.author}</a> on <time dateTime={props.date}>{new Date(props.date).toLocaleDateString()}</time>
-	</address>
-}
+
+/**
+ * Component for displaying article contents.
+ *
+ * @param {Col[]} [props.children] ELements to render. Elements should be react-bootstrap/Col.
+ */
 
 function SingleColumnLayout(props) {
 	return <Container
@@ -40,22 +40,26 @@ function SingleColumnLayout(props) {
 	</Container>
 }
 
+function Signature(props) {
+	return <address className="mb-0">
+		{/** @todo Split to two lines. */}
+		By <a rel="author" href="#author">{props.author}</a> on <time dateTime={props.date}>{new Date(props.date).toLocaleDateString()}</time>
+	</address>
+}
+
 function Article(props) {
 	return <SingleColumnLayout>
-		<Col
-			className="text-center"
-			md={8}>
-
+		<Col className="text-center">
 			<Figure>
 				<Figure.Image
 					alt={props.titleImageCaption}
 					src={props.titleImageSrc} />
 
-				<Figure.Caption className="text-center">{props.titleImageCaption}</Figure.Caption>
+				<Figure.Caption>{props.titleImageCaption}</Figure.Caption>
 			</Figure>
 		</Col>
 
-		<Col md={8}>
+		<Col md={5}>
 			<Card as="article">
 				<Card.Header as="header">
 					<Card.Title as="h1">{props.title}</Card.Title>
