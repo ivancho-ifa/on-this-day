@@ -11,11 +11,25 @@ const articles = [{
 		author: "Monty Gaylord",
 		date: "2019-08-03",
 		rating: 1,
-		comments: [
-			"Adipisci omnis in voluptatem vel fugit cum autem.",
-			"Odio perspiciatis quibusdam veritatis nam quibusdam et aliquid.",
-			"Autem aliquam quidem quo et fugit est dolor."
-		]
+		reviews: [{
+			author: "Nikolas Wilderman",
+			date: "2019-08-08",
+			rating: 3,
+			title: "Mollitia labore et atque.",
+			review: "Adipisci omnis in voluptatem vel fugit cum autem."
+		}, {
+			author: "Carolina Davis Jr.",
+			date: "2019-08-08",
+			rating: 1,
+			title: "Similique est quaerat a illum qui.",
+			review: "Odio perspiciatis quibusdam veritatis nam quibusdam et aliquid."
+		}, {
+			author: "Ruth Mayert",
+			date: "2019-08-08",
+			rating: 5,
+			title: "Numquam nisi tenetur molestiae non magni numquam est ea est.",
+			review: "Autem aliquam quidem quo et fugit est dolor."
+		}]
 	}, {
 		title: "Totam expedita sint porro explicabo doloribus fuga odit occaecati.",
 		titleImageSrc: "http://lorempixel.com/1600/900/nightlife",
@@ -28,12 +42,25 @@ const articles = [{
 		],
 		author: "Jacinto Beahan",
 		date: "2019-08-08",
-		rating: 3,
-		comments: [
-			"Eum recusandae ullam harum expedita et non ipsum.",
-			"Voluptatem ea in rerum soluta. Perspiciatis eaque doloremque quis excepturi qui eum molestiae ut. Unde voluptate quo. Quod necessitatibus architecto sed.",
-			"Nihil rerum in et eaque labore sit illum. Dolorem illo accusamus reprehenderit. Et maiores odio. Iusto enim exercitationem."
-		]
+		reviews: [{
+			author: "Mac Kovacek",
+			date: "2019-08-08",
+			rating: 3,
+			title: "Neque molestiae laboriosam id incidunt.",
+			review: "Eum recusandae ullam harum expedita et non ipsum."
+		}, {
+			author: "Osbaldo Koepp",
+			date: "2019-08-08",
+			rating: 4,
+			title: "Nisi sit aut aut rem sint quam adipisci.",
+			review: "Voluptatem ea in rerum soluta. Perspiciatis eaque doloremque quis excepturi qui eum molestiae ut. Unde voluptate quo. Quod necessitatibus architecto sed."
+		}, {
+			author: "Abby Runte",
+			date: "2019-08-08",
+			rating: 2,
+			title: "Rerum in tempora ratione qui id aut similique non.",
+			review: "Nihil rerum in et eaque labore sit illum. Dolorem illo accusamus reprehenderit. Et maiores odio. Iusto enim exercitationem."
+		}]
 	}
 ]
 

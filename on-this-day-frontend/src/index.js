@@ -23,7 +23,7 @@ ReactDOM.render(<React.Fragment>
 			subtitle         ={article.subtitle}
 			content          ={article.content}
 			rating           ={article.rating}
-			comments         ={article.comments}
+			reviews          ={article.reviews}
 			author           ={article.author}
 			date             ={article.date} />
 	)}
