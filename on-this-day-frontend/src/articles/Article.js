@@ -13,8 +13,7 @@ import * as Constants from '../common/utils/Constants'
 
 function Signature(props) {
 	return <address className="mb-0">
-		By <a rel="author" href="#author">{props.author}</a>
-		on <time dateTime={props.date}>{new Date(props.date).toLocaleDateString()}</time>
+		By <a rel="author" href="#author">{props.author}</a> on <time dateTime={props.date}>{new Date(props.date).toLocaleDateString()}</time>
 	</address>
 }
 
