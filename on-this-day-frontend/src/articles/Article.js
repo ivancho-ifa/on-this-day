@@ -1,10 +1,8 @@
 import React from 'react'
 
 import Card from 'react-bootstrap/Card'
-import CardColumns from 'react-bootstrap/CardColumns'
 import Col from 'react-bootstrap/Col'
 import Container from 'react-bootstrap/Container'
-import ListGroup from 'react-bootstrap/ListGroup'
 import Row from 'react-bootstrap/Row'
 import Figure from 'react-bootstrap/Figure'
 import Jumbotron from 'react-bootstrap/Jumbotron'
@@ -13,6 +11,7 @@ import * as Constants from '../common/utils/Constants'
 
 function Signature(props) {
 	return <address className="mb-0">
+		{/** @todo Split to two lines. */}
 		By <a rel="author" href="#author">{props.author}</a> on <time dateTime={props.date}>{new Date(props.date).toLocaleDateString()}</time>
 	</address>
 }
