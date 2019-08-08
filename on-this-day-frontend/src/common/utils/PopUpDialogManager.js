@@ -1,5 +1,6 @@
 import React from 'react'
 
+
 /**
  * Packs a dialog and its activator.
  *
