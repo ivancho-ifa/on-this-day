@@ -1,6 +1,7 @@
 import React from 'react'
 
 import Card from 'react-bootstrap/Card'
+import CardColumns from 'react-bootstrap/CardColumns'
 import Col from 'react-bootstrap/Col'
 import Container from 'react-bootstrap/Container'
 import ListGroup from 'react-bootstrap/ListGroup'
@@ -9,6 +10,13 @@ import Figure from 'react-bootstrap/Figure'
 import Jumbotron from 'react-bootstrap/Jumbotron'
 
 import * as Constants from '../common/utils/Constants'
+
+function Signature(props) {
+	return <address className="mb-0">
+		By <a rel="author" href="#author">{props.author}</a>
+		on <time dateTime={props.date}>{new Date(props.date).toLocaleDateString()}</time>
+	</address>
+}
 
 function Article(props) {
 	return <Jumbotron fluid className="mb-0">
@@ -38,39 +46,54 @@ function Article(props) {
 								{props.content.map((text, index) => <Card.Text key={index}>{text}</Card.Text>)}
 							</Card.Body>
 
-							<Card.Footer as="footer" className="text-muted text-right align-middle">
-								<address className="mb-0">By <a rel="author" href="#author">{props.author}</a> on <time dateTime={props.date}>{new Date(props.date).toLocaleDateString()}</time></address>
+							<Card.Footer
+								as="footer"
+								className="text-right">
+
+								<Signature
+									author={props.author}
+									date={props.date}/>
 							</Card.Footer>
 						</Card>
 					</Row>
 
 					<Row className="justify-content-center">
 						<Col md={8}>
-							<Card as="section">
-								<Card.Header as="header">
-									<Card.Title>User's reviews for this article</Card.Title>
-									{/** @todo Make this a pop-up. */}
-									<Card.Link href="#login">Log-in to review or share this article</Card.Link>
-								</Card.Header>
+							<section>
+								<header className="mb-5 text-center">
+									<h3>User's reviews for this article</h3>
+									<p>
+										{/** @todo Make this a pop-up. */}
+										<a href="#login" className="lead">Log-in to review or share this article</a>
+									</p>
+								</header>
 
-								<ListGroup variant="flush">
-									{props.reviews.map((review, index) =>
-										<ListGroup.Item as="section" key={index}>
-											<header className="mb-4">
-												<Card.Title>{review.title}</Card.Title>
-												<Card.Text className="text-muted">Rated: {review.rating}/{Constants.maxArticleRating}</Card.Text>
-											</header>
+								{props.reviews.map((review, index) =>
+									<Card
+										as="article"
+										key={index}
+										className="mb-3">
 
-											<p>
-												{review.review}
-											</p>
+										<Card.Header style={{backgroundColor: "inherit", borderBottom: 0}}>
+											<Card.Title>{review.title}</Card.Title>
+											<Card.Text>Rated: {review.rating}/{Constants.maxArticleRating}</Card.Text>
+										</Card.Header>
 
-											<footer className="footer text-muted text-right">
-												<address className="mb-0">By <a rel="author" href="#author">{review.author}</a> on <time dateTime={review.date}>{new Date(review.date).toLocaleDateString()}</time></address>
-											</footer>
-										</ListGroup.Item>)}
-								</ListGroup>
-							</Card>
+										<Card.Body>
+											<Card.Text>{review.review}</Card.Text>
+										</Card.Body>
+
+										<Card.Footer
+											as="footer"
+											className="text-right"
+											style={{backgroundColor: "inherit", borderTop: 0}}>
+
+											<Signature
+												author={props.author}
+												date={props.date}/>
+										</Card.Footer>
+									</Card>)}
+							</section>
 						</Col>
 					</Row>
 				</Col>
