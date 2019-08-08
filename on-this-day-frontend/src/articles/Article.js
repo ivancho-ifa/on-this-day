@@ -5,7 +5,8 @@ import Col from 'react-bootstrap/Col'
 import Container from 'react-bootstrap/Container'
 import Row from 'react-bootstrap/Row'
 import Figure from 'react-bootstrap/Figure'
-import Jumbotron from 'react-bootstrap/Jumbotron'
+
+import classNames from 'classnames'
 
 import * as Constants from '../common/utils/Constants'
 
@@ -16,88 +17,111 @@ function Signature(props) {
 	</address>
 }
 
+function SingleColumnLayout(props) {
+	return <Container
+		as="main"
+		fluid
+		style={{
+			paddingTop: "5rem"
+		}}>
+
+		<Row
+			className="align-items-center"
+			style={{
+				flexDirection: "column"
+			}}>
+
+			{React.Children.map(props.children, (child) =>
+				React.cloneElement(child, {
+					className: classNames(child.props.className, "mb-5")
+				})
+			)}
+		</Row>
+	</Container>
+}
+
 function Article(props) {
-	return <Jumbotron fluid className="mb-0">
-		<Container>
-			<Row className="justify-content-center mb-5">
-				<Figure>
-					<Figure.Image
-						src={props.titleImageSrc}
-						alt={props.titleImageCaption} />
+	return <SingleColumnLayout>
+		<Col
+			className="text-center"
+			md={8}>
 
-					<Figure.Caption className="text-center">
-						{props.titleImageCaption}
-					</Figure.Caption>
-				</Figure>
-			</Row>
+			<Figure>
+				<Figure.Image
+					alt={props.titleImageCaption}
+					src={props.titleImageSrc} />
 
-			<Row className="justify-content-center">
-				<Col md={8}>
-					<Row className="mb-5">
-						<Card as="article">
-							<Card.Header as="header">
-								<Card.Title as="h1">{props.title}</Card.Title>
-								<Card.Text className="lead">{props.subtitle}</Card.Text>
-							</Card.Header>
+				<Figure.Caption className="text-center">{props.titleImageCaption}</Figure.Caption>
+			</Figure>
+		</Col>
 
-							<Card.Body as="article">
-								{props.content.map((text, index) => <Card.Text key={index}>{text}</Card.Text>)}
-							</Card.Body>
+		<Col md={8}>
+			<Card as="article">
+				<Card.Header as="header">
+					<Card.Title as="h1">{props.title}</Card.Title>
+					<Card.Text className="lead">{props.subtitle}</Card.Text>
+				</Card.Header>
 
-							<Card.Footer
-								as="footer"
-								className="text-right">
+				<Card.Body as="article">
+					{props.content.map((text, index) => <Card.Text key={index}>{text}</Card.Text>)}
+				</Card.Body>
 
-								<Signature
-									author={props.author}
-									date={props.date}/>
-							</Card.Footer>
-						</Card>
-					</Row>
+				<Card.Footer
+					as="footer"
+					className="text-right">
 
-					<Row className="justify-content-center">
-						<Col md={8}>
-							<section>
-								<header className="mb-5 text-center">
-									<h3>User's reviews for this article</h3>
-									<p>
-										{/** @todo Make this a pop-up. */}
-										<a href="#login" className="lead">Log-in to review or share this article</a>
-									</p>
-								</header>
+					<Signature
+						author={props.author}
+						date={props.date}/>
+				</Card.Footer>
+			</Card>
+		</Col>
 
-								{props.reviews.map((review, index) =>
-									<Card
-										as="article"
-										key={index}
-										className="mb-3">
+		<Col md={4}>
+			<aside>
+				<header className="text-center mb-5">
+					<h3>User's reviews for this article</h3>
+					<p>
+						{/** @todo Make this a pop-up. */}
+						<a className="lead" href="#login">Log-in to review or share this article</a>
+					</p>
+				</header>
 
-										<Card.Header style={{backgroundColor: "inherit", borderBottom: 0}}>
-											<Card.Title>{review.title}</Card.Title>
-											<Card.Text>Rated: {review.rating}/{Constants.maxArticleRating}</Card.Text>
-										</Card.Header>
+				{props.reviews.map((review, index) => <Card
+					as="article"
+					className="mb-3"
+					key={index}>
 
-										<Card.Body>
-											<Card.Text>{review.review}</Card.Text>
-										</Card.Body>
+					<Card.Header
+						style={{
+							backgroundColor: "inherit",
+							borderBottom: 0
+						}}>
 
-										<Card.Footer
-											as="footer"
-											className="text-right"
-											style={{backgroundColor: "inherit", borderTop: 0}}>
+						<Card.Title>{review.title}</Card.Title>
+						<Card.Text>Rated: {review.rating}/{Constants.maxArticleRating}</Card.Text>
+					</Card.Header>
 
-											<Signature
-												author={props.author}
-												date={props.date}/>
-										</Card.Footer>
-									</Card>)}
-							</section>
-						</Col>
-					</Row>
-				</Col>
-			</Row>
-		</Container>
-	</Jumbotron>
+					<Card.Body>
+						<Card.Text>{review.review}</Card.Text>
+					</Card.Body>
+
+					<Card.Footer
+							as="footer"
+							className="text-right"
+							style={{
+								backgroundColor: "inherit",
+								borderTop: 0
+							}}>
+
+						<Signature
+							author={props.author}
+							date={props.date}/>
+					</Card.Footer>
+				</Card>)}
+			</aside>
+		</Col>
+	</SingleColumnLayout>
 }
 
 export default Article
