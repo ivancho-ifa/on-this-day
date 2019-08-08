@@ -10,13 +10,15 @@ import Footer from './common/Footer'
 
 import { articles } from './__test__/mock/data.js'
 
+const article = articles[0];
+
 ReactDOM.render(<React.Fragment>
 
 	<Navigation />
 
-	{articles.map((article, index) =>
+	{/* {articles.map((article, index) => */}
 		<Article
-			key              ={index}
+			// key              ={index}
 			title            ={article.title}
 			titleImageSrc    ={article.titleImageSrc}
 			titleImageCaption={article.titleImageCaption}
@@ -26,7 +28,7 @@ ReactDOM.render(<React.Fragment>
 			reviews          ={article.reviews}
 			author           ={article.author}
 			date             ={article.date} />
-	)}
+	{/* )} */}
 
 	<Footer />
 </React.Fragment>, document.getElementById('root'))
