@@ -9,12 +9,15 @@ import Row from 'react-bootstrap/Row'
 import classNames from 'classnames'
 
 import * as Constants from '../common/utils/Constants'
+import PopUpDialogManager from '../common/utils/PopUpDialogManager'
+import SearchDialog from '../common/utils/SearchDialog'
 
 
 /**
  * @fileOverview Implements component that renders article's info.
  *
  * @todo Add documentation.
+ * @todo Fine-tune the sizing of the components.
  */
 
 
@@ -25,13 +28,7 @@ import * as Constants from '../common/utils/Constants'
  */
 
 function SingleColumnLayout(props) {
-	return <Container
-		as="main"
-		fluid
-		style={{
-			paddingTop: "5rem"
-		}}>
-
+	return <Container as="main">
 		<Row
 			className="align-items-center"
 			style={{
@@ -74,7 +71,7 @@ function Article(props) {
 			</Figure>
 		</Col>
 
-		<Col md={5}>
+		<Col>
 			<Card as="article">
 				<Card.Header as="header">
 					<Card.Title as="h1">{props.title}</Card.Title>
@@ -96,13 +93,15 @@ function Article(props) {
 			</Card>
 		</Col>
 
-		<Col md={4}>
+		<Col>
 			<aside>
 				<header className="text-center mb-5">
 					<h3>User's reviews for this article</h3>
 					<p>
-						{/** @todo Make this a pop-up. */}
-						<a className="lead" href="#login">Log-in to review or share this article</a>
+						<PopUpDialogManager
+							showDialog={false}
+							activator={<a className="lead" href="#login">Log-in to review or share this article</a>}
+							dialog={<SearchDialog />} />
 					</p>
 				</header>
 
