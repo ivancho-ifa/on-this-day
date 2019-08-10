@@ -10,7 +10,7 @@ import classNames from 'classnames'
 
 import * as Constants from '../common/utils/Constants'
 import PopUpDialogManager from '../common/utils/PopUpDialogManager'
-import SearchDialog from '../common/utils/SearchDialog'
+import LogInDialog from '../common/utils/LogInDialog'
 
 
 /**
@@ -101,7 +101,7 @@ function Article(props) {
 						<PopUpDialogManager
 							showDialog={false}
 							activator={<a className="lead" href="#login">Log-in to review or share this article</a>}
-							dialog={<SearchDialog />} />
+							dialog={<LogInDialog />} />
 					</p>
 				</header>
 
