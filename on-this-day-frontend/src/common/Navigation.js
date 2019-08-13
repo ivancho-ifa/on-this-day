@@ -6,6 +6,7 @@ import Navbar from 'react-bootstrap/Navbar'
 
 import PopUpDialogManager from './utils/PopUpDialogManager'
 import SearchDialog from './utils/SearchDialog'
+import SignUpDialog from './utils/SignUpDialog'
 import LogInDialog from './utils/LogInDialog'
 
 
@@ -35,6 +36,16 @@ function Navigation() {
 						Search
 					</Button>}
 					dialog={<SearchDialog />} />
+
+				<PopUpDialogManager
+					showDialog={false}
+					activator={<Button
+						className="mr-2"
+						variant="outline-secondary">
+
+						Sign up
+					</Button>}
+					dialog={<SignUpDialog />} />
 
 				<PopUpDialogManager
 					showDialog={false}
