@@ -74,7 +74,7 @@ function LogInDialog(props) {
 									variant="primary"
 									onClick={handleClose}>
 
-									LogIn
+									Log in
 								</Button>
 							</Form.Group>
 						</Form>
@@ -105,7 +105,7 @@ function LogInDialog(props) {
 									variant="primary"
 									onClick={handleClose}>
 
-									LogIn
+									Log in
 								</Button>
 							</Form.Group>
 						</Form>
