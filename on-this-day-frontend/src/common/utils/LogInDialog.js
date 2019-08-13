@@ -26,7 +26,7 @@ function LogInDialog(props) {
 		{/** @todo Make logIn3rdParty the default. */}
 		<Tab.Container defaultActiveKey="logInEmail">
 			<Modal.Header className="pb-0 mb-3 border-bottom-0">
-				<Nav variant="tabs" className="w-100">
+				<Nav fill variant="tabs" className="w-100 flex-row">
 					<Nav.Item>
 						{/** @todo Enable this pane. */}
 						<Nav.Link
