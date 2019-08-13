@@ -1,0 +1,8 @@
+{
+	"main": "index.js",
+	"name": "on-this-day-backend",
+	"version": "0.1.0",
+	"dependencies": {
+		"express": "^4.17.1"
+	}
+}
