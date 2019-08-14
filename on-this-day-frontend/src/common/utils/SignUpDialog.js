@@ -6,6 +6,8 @@ import Modal from 'react-bootstrap/Modal'
 import Nav from 'react-bootstrap/Nav'
 import Tab from 'react-bootstrap/Tab'
 
+import FacebookLogin from 'react-facebook-login'
+
 
 /**
  * Log-in dialog.
@@ -19,37 +21,72 @@ import Tab from 'react-bootstrap/Tab'
 function SignUpDialog(props) {
 	function handleClose() {props.onClose()}
 
+	function responseFacebook(response) {
+		const token = new Blob([JSON.stringify({
+			access_token: response.accessToken
+		}, null, 2)], {
+			type : 'application/json'
+		})
+
+		fetch('http://localhost:3003/auth/facebook', {
+			method: 'POST',
+			body: token,
+			mode: 'cors',
+			cache: 'default'
+		}).then(response => {
+			const token = response.headers.get('x-auth-token')
+
+			response.json().then(user => {
+				if (token)
+					console.log(`Successfully authenticated user ${user} with token ${token}`)
+				})
+		}).catch(error => {
+			console.log(`Authentication failed with error ${error}`)
+		})
+	}
+
 	return <Modal
 		show={props.show}
 		onHide={handleClose}>
 
-		{/** @todo Make signUp3rdParty the default. */}
-		<Tab.Container defaultActiveKey="signUpEmail">
+		<Tab.Container defaultActiveKey="signUp3rdParty">
 			<Modal.Header className="pb-0 mb-3 border-bottom-0">
 				<Nav fill variant="tabs" className="w-100 flex-row">
 					<Nav.Item>
-						{/** @todo Enable this pane. */}
+						<Nav.Link eventKey="signUp3rdParty">Existing 3rd-party account</Nav.Link>
+					</Nav.Item>
+
+					{/** @todo Enable signUpEmail and signUpUserName. */}
+					<Nav.Item>
 						<Nav.Link
 							disabled
-							eventKey="signUp3rdParty">
+							eventKey="signUpEmail">
 
-							Existing 3rd-party account
+							Email
 						</Nav.Link>
 					</Nav.Item>
 
 					<Nav.Item>
-						<Nav.Link eventKey="signUpEmail">Email</Nav.Link>
-					</Nav.Item>
+						<Nav.Link
+							disabled
+							eventKey="signUpUserName">
 
-					<Nav.Item>
-						<Nav.Link eventKey="signUpUserName">User name</Nav.Link>
+							User name
+						</Nav.Link>
 					</Nav.Item>
 				</Nav>
 			</Modal.Header>
 
 			<Tab.Content>
-				{/** @todo Enable log-in with Google or Facebook account. */}
-				<Tab.Pane eventKey="signUp3rdParty"></Tab.Pane>
+				<Tab.Pane eventKey="signUp3rdParty">
+					<Modal.Body className="text-center">
+						<FacebookLogin
+							appId="505839750178336"
+							fields="name,email,picture"
+							callback={responseFacebook} />
+					</Modal.Body>
+					<Modal.Footer></Modal.Footer>
+				</Tab.Pane>
 
 				<Tab.Pane eventKey="signUpEmail">
 					<Modal.Body>
