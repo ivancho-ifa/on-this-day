@@ -1,6 +1,6 @@
 const articles = [{
 		title: "Dolorem sint exercitationem fugit sed necessitatibus.",
-		titleImageSrc: "http://lorempixel.com/640/480/cats",
+		titleImageSrc: "https://lorempixel.com/640/480/cats",
 		titleImageCaption: "Quos quae laudantium id ab non alias esse.",
 		subtitle: "Iste sed rerum ut nisi facilis aut veritatis.",
 		content: [
@@ -32,7 +32,7 @@ const articles = [{
 		}]
 	}, {
 		title: "Totam expedita sint porro explicabo doloribus fuga odit occaecati.",
-		titleImageSrc: "http://lorempixel.com/1600/900/nightlife",
+		titleImageSrc: "https://lorempixel.com/1600/900/nightlife",
 		titleImageCaption: "Cupiditate repudiandae ea minus id at.",
 		subtitle: "Architecto amet consectetur error. Occaecati quas velit nobis eos neque harum modi ab.",
 		content: [
