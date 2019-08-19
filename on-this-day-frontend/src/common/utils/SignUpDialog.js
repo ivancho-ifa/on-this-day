@@ -34,6 +34,8 @@ function SignUpDialog(props) {
 
 		if (serverResponse.ok) {
 			console.debug('Successfull authentication!')
+		} else {
+			console.error('Unsuccessfull authentication attempt!')
 		}
 
 		console.debug(serverResponse)
