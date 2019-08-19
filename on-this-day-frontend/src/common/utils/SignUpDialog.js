@@ -32,22 +32,11 @@ function SignUpDialog(props) {
 			}
 		})
 
+		if (serverResponse.ok) {
+			console.debug('Successfull authentication!')
+		}
+
 		console.debug(serverResponse)
-
-		// .then(response => {
-		// 	console.debug(response)
-
-		// 	const token = response.headers.get('x-auth-token')
-
-		// 	console.debug(`Posting to https://localhost:3003/auth/facebook`)
-		// 	response.json().then(user => {
-		// 		if (token) {
-		// 			console.log(`Successfully authenticated user ${user} with token ${token}`)
-		// 		}
-		// 	})
-		// }).catch(error => {
-		// 	console.log(`Authentication failed with error ${error}`)
-		// })
 	}
 
 	return <Modal

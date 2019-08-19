@@ -9,7 +9,7 @@ server.use(cors({
 }))
 
 server.post('/authn/facebook', (request, response) => {
-	response.send(`[Debug] Succesfully handled request to ${request.url}`)
+	response.sendStatus(200)
 	console.debug(request)
 })
 
