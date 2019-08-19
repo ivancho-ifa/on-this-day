@@ -3,6 +3,8 @@ import ReactDOM from 'react-dom'
 
 import 'bootstrap/dist/css/bootstrap.min.css'
 
+import AuthnData from './common/utils/AuthnData'
+
 /** @todo Remove these when not testing individual components anymore */
 import Article from './articles/Article'
 import Navigation from './common/Navigation'
@@ -12,8 +14,7 @@ import { articles } from './__test__/mock/data.js'
 
 const article = articles[0];
 
-ReactDOM.render(<React.Fragment>
-
+ReactDOM.render(<AuthnData.Provider>
 	<Navigation />
 
 	{/* {articles.map((article, index) => */}
@@ -31,4 +32,4 @@ ReactDOM.render(<React.Fragment>
 	{/* )} */}
 
 	<Footer />
-</React.Fragment>, document.getElementById('root'))
+</AuthnData.Provider>, document.getElementById('root'))

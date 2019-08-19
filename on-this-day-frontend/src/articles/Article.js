@@ -101,8 +101,6 @@ function Article(props) {
 				<header className="text-center mb-5">
 					<h3>User's reviews for this article</h3>
 					<AuthnCond
-						isAuthned={false}
-
 						authned={<PopUpDialogManager
 							showDialog={false}
 							activator={<Button
