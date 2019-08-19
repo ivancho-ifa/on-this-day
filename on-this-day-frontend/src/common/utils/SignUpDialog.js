@@ -10,7 +10,7 @@ import FacebookLogin from 'react-facebook-login'
 
 
 /**
- * Log-in dialog.
+ * Sign-up dialog.
  *
  * @param {boolean} props.show - Whether the dialog should be rendered.
  * @param {Function} props.onClose - Callback to execute when closing the dialog.
@@ -19,30 +19,35 @@ import FacebookLogin from 'react-facebook-login'
  */
 
 function SignUpDialog(props) {
-	function handleClose() {props.onClose()}
+	function handleClose() { props.onClose() }
 
-	function responseFacebook(response) {
-		const token = new Blob([JSON.stringify({
-			access_token: response.accessToken
-		}, null, 2)], {
-			type : 'application/json'
-		})
-
-		fetch('http://localhost:3003/auth/facebook', {
+	async function facebookResponseHandler(fbResponse) {
+		const serverResponse = await fetch('http://localhost:3003/authn/facebook', {
 			method: 'POST',
-			body: token,
-			mode: 'cors',
-			cache: 'default'
-		}).then(response => {
-			const token = response.headers.get('x-auth-token')
-
-			response.json().then(user => {
-				if (token)
-					console.log(`Successfully authenticated user ${user} with token ${token}`)
-				})
-		}).catch(error => {
-			console.log(`Authentication failed with error ${error}`)
+			headers: {
+				'Content-Type': 'application/json'
+			},
+			body: {
+				accessToken: fbResponse.accessToken
+			}
 		})
+
+		console.debug(serverResponse)
+
+		// .then(response => {
+		// 	console.debug(response)
+
+		// 	const token = response.headers.get('x-auth-token')
+
+		// 	console.debug(`Posting to https://localhost:3003/auth/facebook`)
+		// 	response.json().then(user => {
+		// 		if (token) {
+		// 			console.log(`Successfully authenticated user ${user} with token ${token}`)
+		// 		}
+		// 	})
+		// }).catch(error => {
+		// 	console.log(`Authentication failed with error ${error}`)
+		// })
 	}
 
 	return <Modal
@@ -83,7 +88,8 @@ function SignUpDialog(props) {
 						<FacebookLogin
 							appId="505839750178336"
 							fields="name,email,picture"
-							callback={responseFacebook} />
+							callback={facebookResponseHandler}
+							icon="fa-facebook"/>
 					</Modal.Body>
 					<Modal.Footer></Modal.Footer>
 				</Tab.Pane>

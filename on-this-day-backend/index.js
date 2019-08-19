@@ -1,8 +1,6 @@
 const express = require('express')
 const cors = require('cors')
-const fs = require('fs')
 const http = require('http')
-const https = require('https')
 
 const server = express()
 
@@ -11,8 +9,8 @@ server.use(cors({
 }))
 
 server.post('/authn/facebook', (request, response) => {
-	response.send(`Tried to authenticate with request ${request}`)
-	console.log(`Tried to authenticate with request ${request}`)
+	response.send(`[Debug] Succesfully handled request to ${request.url}`)
+	console.debug(request)
 })
 
 const portHTTP = 3003
