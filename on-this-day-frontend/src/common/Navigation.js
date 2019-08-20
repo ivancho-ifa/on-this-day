@@ -4,6 +4,8 @@ import Button from 'react-bootstrap/Button'
 import Nav from 'react-bootstrap/Nav'
 import Navbar from 'react-bootstrap/Navbar'
 
+import AccountDialog from './utils/AccountDialog'
+import AuthnCond from './utils/AuthnCond'
 import PopUpDialogManager from './utils/PopUpDialogManager'
 import SearchDialog from './utils/SearchDialog'
 import SignUpDialog from './utils/SignUpDialog'
@@ -37,20 +39,31 @@ function Navigation() {
 					</Button>}
 					dialog={<SearchDialog />} />
 
-				<PopUpDialogManager
-					showDialog={false}
-					activator={<Button
-						className="mr-2"
-						variant="outline-secondary">
+				<AuthnCond
+					authned={<PopUpDialogManager
+						showDialog={false}
+						activator={<Button variant="outline-secondary">
+							Account
+						</Button>}
+						dialog={<AccountDialog />} />}
+					unauthned={<React.Fragment>
+						<PopUpDialogManager
+							showDialog={false}
+							activator={<Button
+								className="mr-2"
+								variant="outline-secondary">
 
-						Sign up
-					</Button>}
-					dialog={<SignUpDialog />} />
+								Sign up
+							</Button>}
+							dialog={<SignUpDialog />} />
 
-				<PopUpDialogManager
-					showDialog={false}
-					activator={<Button variant="outline-secondary">Log in</Button>}
-					dialog={<LogInDialog />} />
+						<PopUpDialogManager
+							showDialog={false}
+							activator={<Button variant="outline-secondary">
+								Log in
+							</Button>}
+							dialog={<LogInDialog />} />
+					</React.Fragment>} />
 			</Navbar.Collapse>
 		</Navbar>
 	)
