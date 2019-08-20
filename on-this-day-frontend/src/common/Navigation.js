@@ -4,12 +4,11 @@ import Button from 'react-bootstrap/Button'
 import Nav from 'react-bootstrap/Nav'
 import Navbar from 'react-bootstrap/Navbar'
 
-import AccountDialog from './utils/AccountDialog'
-import AuthnCond from './utils/AuthnCond'
+import AccountDialog from './utils/dialogs/AccountDialog'
+import AuthnCond from './utils/authn/AuthnCond'
+import AuthnDialog from './utils/dialogs/AuthnDialog'
 import PopUpDialogManager from './utils/PopUpDialogManager'
-import SearchDialog from './utils/SearchDialog'
-import SignUpDialog from './utils/SignUpDialog'
-import LogInDialog from './utils/LogInDialog'
+import SearchDialog from './utils/dialogs/SearchDialog'
 
 
 /**
@@ -42,28 +41,12 @@ function Navigation() {
 				<AuthnCond
 					authned={<PopUpDialogManager
 						showDialog={false}
-						activator={<Button variant="outline-secondary">
-							Account
-						</Button>}
+						activator={<Button variant="outline-secondary">Account</Button>}
 						dialog={<AccountDialog />} />}
-					unauthned={<React.Fragment>
-						<PopUpDialogManager
-							showDialog={false}
-							activator={<Button
-								className="mr-2"
-								variant="outline-secondary">
-
-								Sign up
-							</Button>}
-							dialog={<SignUpDialog />} />
-
-						<PopUpDialogManager
-							showDialog={false}
-							activator={<Button variant="outline-secondary">
-								Log in
-							</Button>}
-							dialog={<LogInDialog />} />
-					</React.Fragment>} />
+					unauthned={<PopUpDialogManager
+						showDialog={false}
+						activator={<Button className="mr-2" variant="outline-secondary">Authenticate</Button>}
+						dialog={<AuthnDialog />} />} />
 			</Navbar.Collapse>
 		</Navbar>
 	)

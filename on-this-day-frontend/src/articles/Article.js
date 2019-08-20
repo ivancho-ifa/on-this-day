@@ -9,10 +9,10 @@ import Row from 'react-bootstrap/Row'
 import classNames from 'classnames'
 
 import * as Constants from '../common/utils/Constants'
-import AddReviewDialog from '../common/utils/AddReviewDialog'
-import AuthnCond from '../common/utils/AuthnCond'
+import AddReviewDialog from '../common/utils/dialogs/AddReviewDialog'
+import AuthnCond from '../common/utils/authn/AuthnCond'
+import AuthnDialog from '../common/utils/dialogs/AuthnDialog'
 import PopUpDialogManager from '../common/utils/PopUpDialogManager'
-import LogInDialog from '../common/utils/LogInDialog'
 import Button from 'react-bootstrap/Button'
 
 
@@ -113,7 +113,7 @@ function Article(props) {
 						unauthned={<PopUpDialogManager
 							showDialog={false}
 							activator={<a className="lead" href="#login">Log-in to review or share this article</a>}
-							dialog={<LogInDialog />} />} />
+							dialog={<AuthnDialog />} />} />
 				</header>
 
 				{props.reviews.map((review, index) => <Card

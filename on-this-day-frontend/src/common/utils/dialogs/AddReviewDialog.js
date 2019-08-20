@@ -4,6 +4,19 @@ import Button from 'react-bootstrap/Button'
 import Form from 'react-bootstrap/Form'
 import Modal from 'react-bootstrap/Modal'
 
+import * as Constants from '../Constants'
+
+
+function generateRatingSelect() {
+	const options = []
+	for (let rating = 1; rating <= Constants.maxArticleRating; ++rating) {
+		options.push(<option key={rating}>{rating}</option>)
+	}
+
+	return <Form.Control as="select">
+		{options}
+	</Form.Control>
+}
 
 function AddReviewDialog(props) {
 	function handleClose() {props.onClose()}
@@ -20,13 +33,7 @@ function AddReviewDialog(props) {
 			<Form>
 				<Form.Group controlId="rating">
 					<Form.Label>Rating</Form.Label>
-					<Form.Control as="select">
-						<option>1</option>
-						<option>2</option>
-						<option>3</option>
-						<option>4</option>
-						<option>5</option>
-					</Form.Control>
+					{generateRatingSelect()}
 				</Form.Group>
 				<Form.Group controlId="review">
 					<Form.Label>Review</Form.Label>

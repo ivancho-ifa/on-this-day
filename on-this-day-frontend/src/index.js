@@ -3,7 +3,7 @@ import ReactDOM from 'react-dom'
 
 import 'bootstrap/dist/css/bootstrap.min.css'
 
-import AuthnData from './common/utils/AuthnData'
+import AuthnData from './common/utils/authn/AuthnData'
 
 /** @todo Remove these when not testing individual components anymore */
 import Article from './articles/Article'
