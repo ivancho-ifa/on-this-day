@@ -6,7 +6,8 @@ import 'bootstrap/dist/css/bootstrap.min.css'
 import AuthnData from './common/utils/authn/AuthnData'
 
 /** @todo Remove these when not testing individual components anymore */
-import Article from './articles/Article'
+import ArticleComponent from './articles/Article'
+import ArticlePage from './pages/Article'
 import Navigation from './common/Navigation'
 import Footer from './common/Footer'
 
@@ -40,9 +41,8 @@ class App extends React.Component {
 
 			<Navigation />
 
-			{/* {articles.map((article, index) => */}
-				<Article
-					// key              ={index}
+			<ArticlePage
+				article={<ArticleComponent
 					title            ={article.title}
 					titleImageSrc    ={article.titleImageSrc}
 					titleImageCaption={article.titleImageCaption}
@@ -51,8 +51,7 @@ class App extends React.Component {
 					rating           ={article.rating}
 					reviews          ={article.reviews}
 					author           ={article.author}
-					date             ={article.date} />
-			{/* )} */}
+					date             ={article.date} />} />
 
 			<Footer />
 		</AuthnData.Provider>

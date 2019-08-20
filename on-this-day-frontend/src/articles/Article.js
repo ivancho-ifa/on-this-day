@@ -31,7 +31,7 @@ import Button from 'react-bootstrap/Button'
  */
 
 function SingleColumnLayout(props) {
-	return <Container as="main">
+	return <Container>
 		<Row
 			className="align-items-center"
 			style={{
@@ -96,7 +96,7 @@ function Article(props) {
 			</Card>
 		</Col>
 
-		<Col>
+		<Col xl={8}>
 			<aside>
 				<header className="text-center mb-5">
 					<h3>User's reviews for this article</h3>
