@@ -9,7 +9,12 @@ server.use(cors({
 }))
 
 server.post('/authn/facebook', (request, response) => {
-	response.sendStatus(200)
+	if (false /** @todo Implement access token is not valid. */) {
+		response.sendStatus(401)
+	} else {
+		response.sendStatus(200)
+	}
+
 	console.debug(request)
 })
 
