@@ -5,7 +5,7 @@ import AuthnData from './AuthnData'
 
 function AuthnCond(props) {
 	return <AuthnData.Consumer>
-		{authnData => authnData.isLoggedIn ? props.authned : props.unauthned}
+		{context => context.authnData.isAuthned ? props.authned : props.unauthned}
 	</AuthnData.Consumer>
 }
 
