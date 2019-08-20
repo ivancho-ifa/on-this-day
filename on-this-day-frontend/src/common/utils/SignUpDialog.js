@@ -1,4 +1,5 @@
 import React from 'react'
+import {useContext} from 'react'
 
 import Button from 'react-bootstrap/Button'
 import Form from 'react-bootstrap/Form'
@@ -7,6 +8,8 @@ import Nav from 'react-bootstrap/Nav'
 import Tab from 'react-bootstrap/Tab'
 
 import FacebookLogin from 'react-facebook-login'
+
+import AuthnData from './AuthnData'
 
 
 /**
@@ -21,6 +24,8 @@ import FacebookLogin from 'react-facebook-login'
 function SignUpDialog(props) {
 	function handleClose() { props.onClose() }
 
+	const setAuthnData = useContext(AuthnData).setAuthnData
+
 	async function facebookResponseHandler(fbResponse) {
 		const serverResponse = await fetch('http://localhost:3003/authn/facebook', {
 			method: 'POST',
@@ -33,6 +38,7 @@ function SignUpDialog(props) {
 		})
 
 		if (serverResponse.ok) {
+			setAuthnData({isAuthned: true})
 			console.debug('Successfull authentication!')
 		} else {
 			console.error('Unsuccessfull authentication attempt!')
@@ -80,6 +86,7 @@ function SignUpDialog(props) {
 							appId="505839750178336"
 							fields="name,email,picture"
 							callback={facebookResponseHandler}
+							onClick={handleClose}
 							icon="fa-facebook"/>
 					</Modal.Body>
 					<Modal.Footer></Modal.Footer>
