@@ -6,7 +6,7 @@ import 'bootstrap/dist/css/bootstrap.min.css'
 import AuthnData from './common/utils/authn/AuthnData'
 
 /** @todo Remove these when not testing individual components anymore */
-import ArticleComponent from './articles/Article'
+import ArticleComponent from './components/Article'
 import ArticlePage from './pages/Article'
 import Navigation from './common/Navigation'
 import Footer from './common/Footer'
