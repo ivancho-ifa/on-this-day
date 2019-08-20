@@ -5,15 +5,6 @@ import Form from 'react-bootstrap/Form'
 import Modal from 'react-bootstrap/Modal'
 
 
-/**
- * Log-in dialog.
- *
- * @param {boolean} props.show - Whether the dialog should be rendered.
- * @param {Function} props.onClose - Callback to execute when closing the dialog.
- *
- * @todo Make this class reusable for all kinds of dialogs.
- */
-
 function AddReviewDialog(props) {
 	function handleClose() {props.onClose()}
 
