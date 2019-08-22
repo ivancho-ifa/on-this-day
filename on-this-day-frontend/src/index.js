@@ -1,19 +1,18 @@
 import React from 'react'
 import ReactDOM from 'react-dom'
+import { BrowserRouter, Route, Switch } from 'react-router-dom'
 
 import 'bootstrap/dist/css/bootstrap.min.css'
 
 import AuthnData from './common/utils/authn/AuthnData'
 
 /** @todo Remove these when not testing individual components anymore */
-import ArticleComponent from './components/Article'
 import ArticlePage from './pages/Article'
+import ArticlesPage from './pages/Articles'
 import Navigation from './common/Navigation'
 import Footer from './common/Footer'
 
-import { articles } from './__test__/mock/data.js'
-
-const article = articles[0];
+import { articles as testArticles } from './__test__/mock/data'
 
 
 /**
@@ -38,22 +37,16 @@ class App extends React.Component {
 
 	render() {
 		return <AuthnData.Provider value={this.state}>
+			<BrowserRouter>
+				<Navigation />
 
-			<Navigation />
+				<Switch>
+					<Route exact path={'/articles'} render={(props) => <ArticlesPage articlesIDs={Object.keys(testArticles)} title="All articles" {...props} />}/>
+					<Route path={"/articles/article:id"} render={(props) => <ArticlePage id={props.match.params.id} {...props} />} />
+				</Switch>
 
-			<ArticlePage
-				article={<ArticleComponent
-					title            ={article.title}
-					titleImageSrc    ={article.titleImageSrc}
-					titleImageCaption={article.titleImageCaption}
-					subtitle         ={article.subtitle}
-					content          ={article.content}
-					rating           ={article.rating}
-					reviews          ={article.reviews}
-					author           ={article.author}
-					date             ={article.date} />} />
-
-			<Footer />
+				<Footer />
+			</BrowserRouter>
 		</AuthnData.Provider>
 	}
 }
