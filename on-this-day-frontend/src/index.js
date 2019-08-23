@@ -5,6 +5,7 @@ import { BrowserRouter, Route, Switch } from 'react-router-dom'
 import 'bootstrap/dist/css/bootstrap.min.css'
 
 import AuthnData from './common/utils/authn/AuthnData'
+import NotFound from './common/utils/NotFound'
 
 /** @todo Remove these when not testing individual components anymore */
 import ArticlePage from './pages/Article'
@@ -43,6 +44,8 @@ class App extends React.Component {
 				<Switch>
 					<Route exact path={'/articles'} render={(props) => <ArticlesPage articlesIDs={Object.keys(testArticles)} title="All articles" {...props} />}/>
 					<Route path={"/articles/article:id"} render={(props) => <ArticlePage id={props.match.params.id} {...props} />} />
+
+					<Route component={NotFound} />
 				</Switch>
 
 				<Footer />
