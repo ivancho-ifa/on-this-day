@@ -1,6 +1,6 @@
 import React from 'react'
 import ReactDOM from 'react-dom'
-import { BrowserRouter, Route, Switch } from 'react-router-dom'
+import { BrowserRouter, Redirect, Route, Switch } from 'react-router-dom'
 
 import 'bootstrap/dist/css/bootstrap.min.css'
 
@@ -42,7 +42,8 @@ class App extends React.Component {
 				<Navigation />
 
 				<Switch>
-					<Route exact path={'/articles'} render={(props) => <ArticlesPage articlesIDs={Object.keys(testArticles)} title="All articles" {...props} />}/>
+					<Route exact path={'/'} render={(props) => <Redirect to='/articles' />} />
+					<Route exact path={'/articles'} render={(props) => <ArticlesPage articlesIDs={Object.keys(testArticles)} title="All articles" {...props} />} />
 					<Route path={"/articles/article:id"} render={(props) => <ArticlePage id={props.match.params.id} {...props} />} />
 
 					<Route component={NotFound} />
