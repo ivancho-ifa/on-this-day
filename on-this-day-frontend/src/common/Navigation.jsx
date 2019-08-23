@@ -21,10 +21,9 @@ import SearchDialog from './utils/dialogs/SearchDialog'
 function Navigation() {
 	return (
 		<Navbar bg="light">
-			<Navbar.Brand href="#on-this-day">On This Day...</Navbar.Brand>
+			<Navbar.Brand href="/">On This Day...</Navbar.Brand>
 			<Nav>
-				<Nav.Item><Nav.Link href="#satelite">Satelite</Nav.Link></Nav.Item>
-				<Nav.Item><Nav.Link href="#about">About us</Nav.Link></Nav.Item>
+				<Nav.Item><Nav.Link href="/articles">Articles</Nav.Link></Nav.Item>
 			</Nav>
 
   			<Navbar.Collapse className="justify-content-end">
