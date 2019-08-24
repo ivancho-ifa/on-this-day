@@ -78,11 +78,11 @@ function AuthnDialog(props) {
 						<Form>
 							<Form.Group controlId="email">
 								<Form.Label>Email</Form.Label>
-								<Form.Control type="email" />
+								<Form.Control type="email" autoComplete="email" />
 							</Form.Group>
-							<Form.Group controlId="password">
+							<Form.Group controlId="signInPassword">
 								<Form.Label>Password</Form.Label>
-								<Form.Control type="password" />
+								<Form.Control type="password" autoComplete="current-password" />
 							</Form.Group>
 						</Form>
 					</Modal.Body>
@@ -108,15 +108,15 @@ function AuthnDialog(props) {
 						<Form>
 							<Form.Group controlId="userEmail">
 								<Form.Label>User email</Form.Label>
-								<Form.Control type="email" />
+								<Form.Control type="email" autoComplete="email" />
 							</Form.Group>
-							<Form.Group controlId="password">
+							<Form.Group controlId="signUpPassword">
 								<Form.Label>Password</Form.Label>
-								<Form.Control type="password" />
+								<Form.Control type="password" autoComplete="new-password" />
 							</Form.Group>
 							<Form.Group controlId="confirmPassword">
 								<Form.Label>Confirm password</Form.Label>
-								<Form.Control type="confirmPassword" />
+								<Form.Control type="confirmPassword" autoComplete="new-password" />
 							</Form.Group>
 						</Form>
 					</Modal.Body>
