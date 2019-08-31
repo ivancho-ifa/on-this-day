@@ -7,12 +7,14 @@ import 'bootstrap/dist/css/bootstrap.min.css'
 import AuthnData from './common/utils/authn/AuthnData'
 import NotFound from './common/utils/NotFound'
 
-/** @todo Remove these when not testing individual components anymore */
 import ArticlePage from './pages/Article'
 import ArticlesPage from './pages/Articles'
+import CreateArticlePage from './pages/CreateArticle'
+
 import Navigation from './common/Navigation'
 import Footer from './common/Footer'
 
+/** @todo Remove these when not testing individual components anymore */
 import { articles as testArticles } from './__test__/mock/data'
 
 
@@ -45,6 +47,7 @@ class App extends React.Component {
 					<Route exact path={'/'} render={(props) => <Redirect to='/articles' />} />
 					<Route exact path={'/articles'} render={(props) => <ArticlesPage articlesIDs={Object.keys(testArticles)} title="All articles" {...props} />} />
 					<Route path={"/articles/article:id"} render={(props) => <ArticlePage id={props.match.params.id} {...props} />} />
+					<Route path={"/articles/createArticle"} component={CreateArticlePage} />
 
 					<Route component={NotFound} />
 				</Switch>

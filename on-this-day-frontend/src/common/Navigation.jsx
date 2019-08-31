@@ -24,6 +24,9 @@ function Navigation() {
 			<Navbar.Brand href="/">On This Day...</Navbar.Brand>
 			<Nav>
 				<Nav.Item><Nav.Link href="/articles">Articles</Nav.Link></Nav.Item>
+				<AuthnCond
+					authned={<Nav.Item><Nav.Link className="p-0 ml-2" href="/articles/createArticle"><Button variant="outline-primary">Create article</Button></Nav.Link></Nav.Item>}
+					unauthned={<React.Fragment />} />
 			</Nav>
 
   			<Navbar.Collapse className="justify-content-end">
