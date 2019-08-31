@@ -14,7 +14,7 @@ import React from 'react'
  */
 
 function PopUpDialogManager(props) {
-	const [showDialog, setShowDialog] = React.useState(props.showDialog);
+	const [showDialog, setShowDialog] = React.useState(props.showDialog)
 
 	function handleCloseDialog() { setShowDialog(false) }
 	function handleShowDialog() { setShowDialog(true) }
