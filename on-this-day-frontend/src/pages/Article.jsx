@@ -6,14 +6,33 @@ import Row from 'react-bootstrap/Row'
 
 import ArticleComponent from '../components/Article'
 
-/** @todo Remove these when not testing anymore */
-import { getArticleAtID } from '../__test__/mock/data.js'
 
+async function getArticleData(id, callback) {
+	const articleResponse = await fetch(`http://localhost:3003/articles/article-${id}`)
+	/** @todo Handle bad response. */
+	const article = await articleResponse.json()
+
+	console.debug(article)
+
+	callback(article)
+}
+
+
+/**
+ * Component for an article's page.
+ *
+ * @returns The page if articleData is loaded, else - an empty component.
+ */
 
 function Article(props) {
-	const articleData = getArticleAtID(props.id)
+	const [articleData, setArticleData] = React.useState(undefined)
 
-	return <Container className="pt-5 mt-5">
+	React.useEffect(() => {
+		getArticleData(props.id, setArticleData)
+	}, [props.id])
+
+	return articleData ?
+	<Container className="pt-5 mt-5">
 		<Row className="justify-content-center">
 			<Col xl={8}>
 				{<ArticleComponent
@@ -28,7 +47,7 @@ function Article(props) {
 					date             ={articleData.date} />}
 			</Col>
 		</Row>
-	</Container>
+	</Container> : <React.Fragment />
 }
 
 export default Article

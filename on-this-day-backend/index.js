@@ -2,6 +2,9 @@ const express = require('express')
 const cors = require('cors')
 const http = require('http')
 
+/** @todo Remove these when not testing individual components anymore */
+const testArticles = require('./__test__/mock/articles.json')
+
 const server = express()
 
 server.use(cors({
@@ -16,6 +19,19 @@ server.post('/authn/facebook', (request, response) => {
 	}
 
 	console.debug(request)
+})
+
+server.get('/articles/article-:id', (request, response) => {
+	response.send(testArticles[request.params.id])
+
+	console.debug(testArticles[request.params.id])
+})
+
+server.get('/articles', (request, response) => {
+	const allArticlesIDs = Object.keys(testArticles)
+	response.send(allArticlesIDs)
+
+	console.debug(allArticlesIDs)
 })
 
 const portHTTP = 3003

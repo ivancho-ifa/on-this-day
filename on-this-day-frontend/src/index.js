@@ -14,9 +14,6 @@ import CreateArticlePage from './pages/CreateArticle'
 import Navigation from './common/Navigation'
 import Footer from './common/Footer'
 
-/** @todo Remove these when not testing individual components anymore */
-import { articles as testArticles } from './__test__/mock/data'
-
 
 /**
  * Note that this component is needed because authnData must be in the state of
@@ -45,7 +42,8 @@ class App extends React.Component {
 
 				<Switch>
 					<Route exact path={'/'} render={(props) => <Redirect to='/articles' />} />
-					<Route exact path={'/articles'} render={(props) => <ArticlesPage articlesIDs={Object.keys(testArticles)} title="All articles" {...props} />} />
+					<Route exact path={'/articles'} render={(props) => <ArticlesPage articlesIDs={[]} title="All articles" {...props} />} />
+					{/** @todo Rename to /articles/article-:id */}
 					<Route path={"/articles/article:id"} render={(props) => <ArticlePage id={props.match.params.id} {...props} />} />
 					<Route path={"/articles/createArticle"} component={CreateArticlePage} />
 
