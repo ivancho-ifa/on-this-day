@@ -1,48 +1,44 @@
 import React from 'react'
 
-import { Link } from 'react-router-dom'
-
 import Button from 'react-bootstrap/Button'
 import Col from 'react-bootstrap/Col'
 import Form from 'react-bootstrap/Form'
 import Modal from 'react-bootstrap/Modal'
 
+const MONTHS = [
+	"january",
+	"february",
+	"march",
+	"april",
+	"may",
+	"june",
+	"july",
+	"august",
+	"september",
+	"october",
+	"november",
+	"december"
+]
+Object.freeze(MONTHS)
 
-const months = {
-	january: "january",
-	february: "february",
-	march: "march",
-	april: "april",
-	may: "may",
-	june: "june",
-	july: "july",
-	august: "august",
-	september:  "september",
-	october: "october",
-	november:"november",
-	december: "december"
-}
-Object.freeze(months)
-
-function daysInMonth(month, year) {
-	if (month === undefined) {
+function daysInMonth(monthValue, year) {
+	if (monthValue === undefined) {
 		return 31
 	}
 
-	switch (month) {
-		case months.january: return 31
-		case months.february:
-			return (year === undefined && year % 4 === 0) ? 29 : 28
-		case months.march: return 31
-		case months.april: return 30
-		case months.may: return 31
-		case months.june: return 30
-		case months.july: return 31
-		case months.august: return 31
-		case months.september: return 30
-		case months.october: return 31
-		case months.november: return 30
-		case months.december: return 31
+	switch (monthValue) {
+		case 0: return 31
+		case 1: return (year === undefined && year % 4 === 0) ? 29 : 28
+		case 2: return 31
+		case 3: return 30
+		case 4: return 31
+		case 5: return 30
+		case 6: return 31
+		case 7: return 31
+		case 8: return 30
+		case 9: return 31
+		case 10: return 30
+		case 11: return 31
 
 		default:
 			throw new Error("Unexisting month!")
@@ -65,48 +61,20 @@ class SearchDialog extends React.Component {
 
 		this.state = {
 			date: undefined,
-			month: undefined,
+			monthValue: undefined,
 			year: undefined,
 			keywords: undefined
 		}
-
-		this.handleSubmit = this.handleSubmit.bind(this)
 	}
 
-	handleFormChange(event) {
-		console.debug(`event.target.name: ${event.target.name}`)
-		console.debug(`event.target.value: ${event.target.value}`)
-
+	handleChange(event) {
 		this.setState({
 			[event.target.name]: event.target.value
-		}, () => {
-			console.debug(`Updating this.state to ${JSON.stringify(this.state)}.`)
 		});
 	}
 
-	handleSubmit(event) {
-		event.preventDefault()
-
-		let filters = {}
-		if (this.state.date) {
-			filters.date = this.state.date
-		}
-		if (this.state.month) {
-			filters.month = this.state.month
-		}
-		if (this.state.year) {
-			filters.year = this.state.year
-		}
-		if (this.state.keywords) {
-			filters.keywords = this.state.keywords
-		}
-
-		console.debug(filters)
-	}
-
-	genDateSelect(month, year) {
-		const lastDayOfMonth = daysInMonth(month , year)
-		console.debug(`Last day of month(${month}) is ${lastDayOfMonth}.`)
+	genDateSelect(monthValue, year) {
+		const lastDayOfMonth = daysInMonth(monthValue , year)
 
 		let options = [<option key="undefined" value={undefined}>undefined</option>]
 		for (let date = 1; date <= lastDayOfMonth; ++date) {
@@ -123,7 +91,7 @@ class SearchDialog extends React.Component {
 			defaultValue={undefined}
 			form="searchSubmitForm"
 			name="date"
-			onChange={(event) => {this.handleFormChange(event)}}
+			onChange={(event) => {this.handleChange(event)}}
 			style={{
 				textTransform: "capitalize"
 			}}
@@ -135,29 +103,25 @@ class SearchDialog extends React.Component {
 
 	genMonthSelect() {
 		let options = [<option key="undefined" value={undefined}>undefined</option>]
-		for (const key in months) {
-			if (months.hasOwnProperty(key)) {
-				const month = months[key];
+		MONTHS.forEach((monthName, monthValue) => {
+			options.push(
+				<option
+					key={monthValue}
+					value={monthValue}>
 
-				options.push(<option
-					key={month}
-					value={month}>
-
-					{month}
-				</option>)
-			}
-		}
+					{monthName}
+				</option>)})
 
 		return <Form.Control
 			as="select"
 			defaultValue={undefined}
 			form="searchSubmitForm"
 			name="month"
-			onChange={(event) => {this.handleFormChange(event)}}
+			onChange={(event) => {this.handleChange(event)}}
 			style={{
 				textTransform: "capitalize"
 			}}
-			value={this.state.month}>
+			value={this.state.monthValue}>
 
 			{options}
 		</Form.Control>
@@ -178,7 +142,7 @@ class SearchDialog extends React.Component {
 							<Col>
 								<Form.Group controlId="searchDate">
 									<Form.Label>Date</Form.Label>
-									{this.genDateSelect(this.state.month, this.state.year)}
+									{this.genDateSelect(this.state.monthValue, this.state.year)}
 								</Form.Group>
 							</Col>
 							<Col>
@@ -202,9 +166,15 @@ class SearchDialog extends React.Component {
 				</Modal.Body>
 
 				<Modal.Footer>
-					<Form id="searchSubmitForm" onSubmit={this.handleSubmit}>
+					<Form id="searchSubmitForm" onSubmit={handleClose}>
 						<Form.Group controlId="searchSubmit">
-							<Button variant="primary" href={`/articles/filter/${JSON.stringify(this.state)}`}>Search</Button>
+							<Button
+								href={`/articles/filter/${JSON.stringify(this.state)}`}
+								type="submit"
+								variant="primary">
+
+								Search
+							</Button>
 						</Form.Group>
 					</Form>
 				</Modal.Footer>

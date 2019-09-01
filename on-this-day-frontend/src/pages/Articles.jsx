@@ -15,8 +15,6 @@ async function getArticleData(id, callback) {
 	/** @todo Handle bad response. */
 	const article = await articleResponse.json()
 
-	console.debug(article)
-
 	callback(article)
 }
 
@@ -53,31 +51,19 @@ function Article(props) {
 
 
 async function getArticlesIDs(filters, callback) {
-	console.debug(filters)
+	let url = new URL('http://localhost:3003/articles')
+	Object.keys(filters).forEach(key => url.searchParams.append(key, filters[key]))
 
-	let articlesResponse = undefined
-	if (Object.entries(filters).length === 0 && filters.constructor === Object) {
-		articlesResponse = await fetch('http://localhost:3003/articles', {method: 'GET'})
-	} else {
-		articlesResponse = await fetch('http://localhost:3003/articles/filter', {
-			method: 'POST',
-			headers: {
-				'Content-Type': 'application/json'
-			},
-			body: JSON.stringify(filters)
-		})
-	}
-
+	let articlesResponse = await fetch(url.toString())
 	/** @todo Handle bad response. */
 	const articles = await articlesResponse.json()
-
-	console.debug(articles)
 
 	callback(articles)
 }
 
+
 /**
- * @todo Accept a filter.
+ * @todo Accept query not JSON string.
  */
 
 function Articles(props) {
