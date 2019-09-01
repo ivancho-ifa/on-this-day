@@ -1,5 +1,7 @@
 import React from 'react'
 
+import { Link } from 'react-router-dom'
+
 import Button from 'react-bootstrap/Button'
 import Col from 'react-bootstrap/Col'
 import Form from 'react-bootstrap/Form'
@@ -67,6 +69,8 @@ class SearchDialog extends React.Component {
 			year: undefined,
 			keywords: undefined
 		}
+
+		this.handleSubmit = this.handleSubmit.bind(this)
 	}
 
 	handleFormChange(event) {
@@ -78,6 +82,26 @@ class SearchDialog extends React.Component {
 		}, () => {
 			console.debug(`Updating this.state to ${JSON.stringify(this.state)}.`)
 		});
+	}
+
+	handleSubmit(event) {
+		event.preventDefault()
+
+		let filters = {}
+		if (this.state.date) {
+			filters.date = this.state.date
+		}
+		if (this.state.month) {
+			filters.month = this.state.month
+		}
+		if (this.state.year) {
+			filters.year = this.state.year
+		}
+		if (this.state.keywords) {
+			filters.keywords = this.state.keywords
+		}
+
+		console.debug(filters)
 	}
 
 	genDateSelect(month, year) {
@@ -97,6 +121,7 @@ class SearchDialog extends React.Component {
 		return <Form.Control
 			as="select"
 			defaultValue={undefined}
+			form="searchSubmitForm"
 			name="date"
 			onChange={(event) => {this.handleFormChange(event)}}
 			style={{
@@ -126,6 +151,7 @@ class SearchDialog extends React.Component {
 		return <Form.Control
 			as="select"
 			defaultValue={undefined}
+			form="searchSubmitForm"
 			name="month"
 			onChange={(event) => {this.handleFormChange(event)}}
 			style={{
@@ -164,21 +190,21 @@ class SearchDialog extends React.Component {
 							<Col>
 								<Form.Group controlId="searchYear">
 									<Form.Label>Year</Form.Label>
-									<Form.Control type="number" />
+									<Form.Control type="number" form="searchSubmitForm" />
 								</Form.Group>
 							</Col>
 						</Form.Row>
 						<Form.Group controlId="searchKeywords">
 							<Form.Label>Keywords</Form.Label>
-							<Form.Control type="search" />
+							<Form.Control type="search" form="searchSubmitForm" />
 						</Form.Group>
 					</Form>
 				</Modal.Body>
 
 				<Modal.Footer>
-					<Form>
+					<Form id="searchSubmitForm" onSubmit={this.handleSubmit}>
 						<Form.Group controlId="searchSubmit">
-							<Button variant="primary" onClick={handleClose}>Search</Button>
+							<Button variant="primary" href={`/articles/filter/${JSON.stringify(this.state)}`}>Search</Button>
 						</Form.Group>
 					</Form>
 				</Modal.Footer>

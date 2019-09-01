@@ -42,7 +42,8 @@ class App extends React.Component {
 
 				<Switch>
 					<Route exact path={'/'} render={(props) => <Redirect to='/articles' />} />
-					<Route exact path={'/articles'} render={(props) => <ArticlesPage articlesIDs={[]} title="All articles" {...props} />} />
+					<Route exact path={'/articles'} render={(props) => <ArticlesPage filters={{}} title="All articles" {...props} />} />
+					<Route path={'/articles/filter/:filters'} render={(props) => <ArticlesPage filters={JSON.parse(props.match.params.filters)} title={`Filtered by ${props.match.params.filters}`} {...props} />} />
 					{/** @todo Rename to /articles/article-:id */}
 					<Route path={"/articles/article:id"} render={(props) => <ArticlePage id={props.match.params.id} {...props} />} />
 					<Route path={"/articles/createArticle"} component={CreateArticlePage} />

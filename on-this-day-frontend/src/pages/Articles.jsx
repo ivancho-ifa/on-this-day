@@ -52,8 +52,22 @@ function Article(props) {
 }
 
 
-async function getArticlesIDs(callback) {
-	const articlesResponse = await fetch(`http://localhost:3003/articles`)
+async function getArticlesIDs(filters, callback) {
+	console.debug(filters)
+
+	let articlesResponse = undefined
+	if (Object.entries(filters).length === 0 && filters.constructor === Object) {
+		articlesResponse = await fetch('http://localhost:3003/articles', {method: 'GET'})
+	} else {
+		articlesResponse = await fetch('http://localhost:3003/articles/filter', {
+			method: 'POST',
+			headers: {
+				'Content-Type': 'application/json'
+			},
+			body: JSON.stringify(filters)
+		})
+	}
+
 	/** @todo Handle bad response. */
 	const articles = await articlesResponse.json()
 
@@ -70,8 +84,8 @@ function Articles(props) {
 	const [articlesIDs, setArticlesIDs] = React.useState(undefined)
 
 	React.useEffect(() => {
-		getArticlesIDs(setArticlesIDs)
-	}, [])
+		getArticlesIDs(props.filters, setArticlesIDs)
+	}, [props.filters])
 
 	return articlesIDs ? <Container className="pt-5">
 		<Row>

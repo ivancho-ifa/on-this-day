@@ -32,9 +32,9 @@ function AuthnDialog(props) {
 			headers: {
 				'Content-Type': 'application/json'
 			},
-			body: {
+			body: JSON.stringify({
 				accessToken: fbResponse.accessToken
-			}
+			})
 		})
 
 		if (serverResponse.ok) {
