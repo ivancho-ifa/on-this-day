@@ -4,53 +4,48 @@ const http = require('http')
 const bodyParser = require('body-parser')
 
 /** @todo Remove these when not testing individual components anymore */
-const testArticles = require('./__test__/mock/articles.json')
+const TEST_ARTICLES = require('./__test__/mock/articles.json')
 
-const filters = {
+const FILTERS = {
 	date: function(date, article) {
-		const articleDate = new Date(article.date).getDate()
-		return articleDate == date
+		return new Date(article.date).getDate() === Number(date)
 	},
+
 	month: function(month, article) {
-		const articleMonth = new Date(article.date).getMonth()
-		return articleMonth == month
+		return new Date(article.date).getMonth() === Number(month)
 	},
+
 	year: function(year, article) {
-		const articleYear = new Date(article.date).getFullYear()
-		return articleYear == year
+		return new Date(article.date).getFullYear() === Number(year)
 	},
+
 	keywords: function(keywords, article) {
 		const articleContent = article.content
 
+		/** True if some paragraph contains some keyword. */
 		return articleContent.some(
 			(paragraph) => keywords.some(
 				(keyword) => paragraph.search(keyword) !== -1))
 	}
 }
 
-function filterTestArticles(filter) {
-	let articleIDs = []
+function FILTER_TEST_ARTICLES(filters) {
+	return Object.keys(TEST_ARTICLES).filter(
+		articleID => {
+			const article = TEST_ARTICLES[articleID]
 
-	for (const articleID in testArticles) {
-		if (testArticles.hasOwnProperty(articleID)) {
-			const article = testArticles[articleID]
+			return (
+				Object.keys(filters).every(key => {
+					const filter = FILTERS[key]
+					const criteria = filters[key]
 
-			for (const key in filter) {
-				if (filter.hasOwnProperty(key) && filter[key]) {
-					const filterMethod = filters[key]
-					const condition = filter[key]
+					return filter(criteria, article)
+				}))
+		})
+}
 
-					if (filterMethod(condition, article)) {
-						articleIDs.push(articleID)
-
-						break
-					}
-				}
-			}
-		}
-	}
-
-	return articleIDs
+function isEmptyObject(object) {
+	return Object.entries(object).length === 0 && object.constructor === Object
 }
 
 
@@ -68,30 +63,27 @@ server.post('/authn/facebook', (request, response) => {
 	} else {
 		response.sendStatus(200)
 	}
-
-	console.debug(request)
 })
 
 server.get('/articles/article-:id', (request, response) => {
-	response.send(testArticles[request.params.id])
+	response.send(TEST_ARTICLES[request.params.id])
 })
 
 server.get('/articles', (request, response) => {
-	response.send(Object.keys(testArticles))
-})
+	const filters = request.query
 
-server.post('/articles/filter', (request, response) => {
-	const filter = request.body
-	if (filter.keywords) {
-		filter.keywords = JSON.parse(filter.keywords)
+	if (!!filters && !isEmptyObject(filters)) {
+		if (filters.keywords) {
+			filters.keywords = JSON.parse(filters.keywords)
+		}
+
+		const matchedIDs = FILTER_TEST_ARTICLES(filters)
+		response.send(matchedIDs)
+
+		console.debug(`filtering: ${JSON.stringify(filters)} => ${JSON.stringify(matchedIDs)}`)
+	} else {
+		response.send(Object.keys(TEST_ARTICLES))
 	}
-
-	console.log(filter)
-
-	const matchedIDs = filterTestArticles(filter)
-	response.send(matchedIDs)
-
-	console.debug(matchedIDs)
 })
 
 const portHTTP = 3003
