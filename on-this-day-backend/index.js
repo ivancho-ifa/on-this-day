@@ -49,6 +49,14 @@ function isEmptyObject(object) {
 }
 
 
+
+const MongoClient = require('mongodb').MongoClient
+const ObjectID = require('mongodb').ObjectID
+
+const DB_URI = "mongodb+srv://IvanMollov:y3wBqxB10O@onthisday-gruiq.mongodb.net/on-this-day?retryWrites=true&w=majority"
+const CLIENT = new MongoClient(DB_URI, { useNewUrlParser: true, useUnifiedTopology: true })
+
+
 const server = express()
 
 server.use(bodyParser.json())
@@ -63,10 +71,6 @@ server.post('/authn/facebook', (request, response) => {
 	} else {
 		response.sendStatus(200)
 	}
-})
-
-server.get('/articles/article-:id', (request, response) => {
-	response.send(TEST_ARTICLES[request.params.id])
 })
 
 server.get('/articles', (request, response) => {
@@ -86,10 +90,20 @@ server.get('/articles', (request, response) => {
 	}
 })
 
-const portHTTP = 3003
+CLIENT.connect(error => {
+	if (error) throw error
 
-function onStartHTTP() {
-	console.log(`HTTP server listening on http://localhost:${portHTTP}.`)
-}
+	const DB = CLIENT.db("on-this-day")
 
-http.createServer(server).listen(portHTTP, onStartHTTP)
+	server.get('/articles/article-:id', async (request, response) => {
+		DB.collection('articles').findOne({_id: new ObjectID(request.params.id)}, (error, article) => {
+			if (error) throw error
+
+			response.send(article)
+		})
+	})
+
+	server.listen(3003, () => {
+		console.log("HTTP server listening on http://localhost:3003.")
+	})
+})
