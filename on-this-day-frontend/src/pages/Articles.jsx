@@ -50,6 +50,7 @@ function Article(props) {
 }
 
 
+/** @todo Fix naming. Maybe extend function to take projections. */
 async function getArticlesIDs(filters, callback) {
 	let url = new URL('http://localhost:3003/articles')
 	Object.keys(filters).forEach(key => url.searchParams.append(key, filters[key]))
@@ -79,7 +80,7 @@ function Articles(props) {
 				<h1 className="mb-5">{props.title}</h1>
 
 				<CardColumns>
-					{articlesIDs.map((id) => <Article id={id} key={id} rootPath={`${props.match.url}`} />)}
+					{articlesIDs.map((article) => <Article id={article._id} key={article._id} rootPath={`${props.match.url}`} />)}
 				</CardColumns>
 			</Col>
 		</Row>

@@ -73,29 +73,32 @@ server.post('/authn/facebook', (request, response) => {
 	}
 })
 
-server.get('/articles', (request, response) => {
-	const filters = request.query
-
-	if (!!filters && !isEmptyObject(filters)) {
-		if (filters.keywords) {
-			filters.keywords = JSON.parse(filters.keywords)
-		}
-
-		const matchedIDs = FILTER_TEST_ARTICLES(filters)
-		response.send(matchedIDs)
-
-		console.debug(`filtering: ${JSON.stringify(filters)} => ${JSON.stringify(matchedIDs)}`)
-	} else {
-		response.send(Object.keys(TEST_ARTICLES))
-	}
-})
-
 CLIENT.connect(error => {
 	if (error) throw error
 
 	const DB = CLIENT.db("on-this-day")
 
-	server.get('/articles/article-:id', async (request, response) => {
+	server.get('/articles', (request, response) => {
+		const filters = request.query
+
+		if (!!filters && !isEmptyObject(filters)) {
+			if (filters.keywords) {
+				filters.keywords = JSON.parse(filters.keywords)
+			}
+
+			const matchedIDs = FILTER_TEST_ARTICLES(filters)
+			response.send(matchedIDs)
+
+			console.debug(`filtering: ${JSON.stringify(filters)} => ${JSON.stringify(matchedIDs)}`)
+		} else {
+			// response.send(Object.keys(TEST_ARTICLES))
+			DB.collection('articles').find({}, { projection: { _id: true } }).toArray((error, articlesIDs) => {
+				response.send(articlesIDs)
+			})
+		}
+	})
+
+	server.get('/articles/article-:id', (request, response) => {
 		DB.collection('articles').findOne({_id: new ObjectID(request.params.id)}, (error, article) => {
 			if (error) throw error
 
