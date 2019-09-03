@@ -20,14 +20,12 @@ import Button from 'react-bootstrap/Button'
  * @fileOverview Implements component that renders article's info.
  *
  * @todo Add documentation.
- * @todo Fine-tune the sizing of the components.
+ * @todo Refresh on new comment.
  */
 
 
 /**
  * Component for displaying article contents.
- *
- * @param {Col[]} [props.children] - HTML elements to render. Preferred type is react-bootstrap/Col, should work with others.
  */
 
 function SingleColumnLayout(props) {
@@ -50,8 +48,12 @@ function SingleColumnLayout(props) {
 
 function Signature(props) {
 	return <address className="mb-0">
-		{/** @todo Split to two lines. */}
-		By <a rel="author" href="#author">{props.author}</a> on <time dateTime={props.date}>{new Date(props.date).toLocaleDateString()}</time>
+		{/**
+		  * @todo Split to two lines without trashing whitespace.
+		  * @todo Current format is m/d/YYYY. Fix it.
+		  */}
+
+		By <a rel="author" href="#author">{props.author}</a> on <time dateTime={props.date}>{new Date(props.date.year, props.date.month - 1, props.date.date).toLocaleDateString()}</time>
 	</address>
 }
 
@@ -108,11 +110,11 @@ function Article(props) {
 								variant="secondary">
 								Add your review
 							</Button>}
-							dialog={<AddReviewDialog />} />}
+							dialog={<AddReviewDialog articleID={props.articleID} />} />}
 
 						unauthned={<PopUpDialogManager
 							showDialog={false}
-							activator={<a className="lead" href="#login">Log-in to review or share this article</a>}
+							activator={<Button variant="secondary">Log-in to review or share this article</Button>}
 							dialog={<AuthnDialog />} />} />
 				</header>
 

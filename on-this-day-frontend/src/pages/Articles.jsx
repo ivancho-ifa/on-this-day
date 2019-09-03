@@ -42,7 +42,7 @@ function Article(props) {
 		</Card.Header>
 
 		<Card.Footer as="footer" className="border-top-0 text-right">
-			<Link to={`${props.rootPath}/article${props.id}`}>
+			<Link to={`/articles/article${props.id}`}>
 				<Button variant="primary">Read more...</Button>
 			</Link>
 		</Card.Footer>
@@ -80,7 +80,7 @@ function Articles(props) {
 				<h1 className="mb-5">{props.title}</h1>
 
 				<CardColumns>
-					{articlesIDs.map((article) => <Article id={article._id} key={article._id} rootPath={`${props.match.url}`} />)}
+					{articlesIDs.map((article) => <Article id={article._id} key={article._id} />)}
 				</CardColumns>
 			</Col>
 		</Row>

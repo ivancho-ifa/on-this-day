@@ -77,6 +77,39 @@ CLIENT.connect(error => {
 		})
 	})
 
+	server.post('/articles/article-:id/add-review', (request, response) => {
+		const today = new Date()
+
+		/**
+		 * @todo Get author from token.
+		 * @todo Validate data.
+		 */
+
+
+
+		DB.collection('articles').updateOne({
+			_id: new ObjectID(request.params.id)
+		}, {
+			$push: {
+				reviews: {
+					author: "Nqkoi Pichaga",
+					date: {
+						date: today.getDate(),
+						month: today.getMonth() + 1,
+						year: today.getFullYear()
+					},
+					rating: request.body.rating,
+					title: request.body.title,
+					review: request.body.review
+				}
+			}
+		}, (error, result) => {
+			if (error) throw error
+
+			response.sendStatus(200)
+		})
+	})
+
 	server.listen(3003, () => {
 		console.log("HTTP server listening on http://localhost:3003.")
 	})

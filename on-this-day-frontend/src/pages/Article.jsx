@@ -12,8 +12,6 @@ async function getArticleData(id, callback) {
 	/** @todo Handle bad response. */
 	const article = await articleResponse.json()
 
-	console.debug(article)
-
 	callback(article)
 }
 
@@ -36,6 +34,7 @@ function Article(props) {
 		<Row className="justify-content-center">
 			<Col xl={8}>
 				{<ArticleComponent
+					articleID        ={props.id}
 					title            ={articleData.title}
 					titleImageSrc    ={articleData.titleImageSrc}
 					titleImageCaption={articleData.titleImageCaption}
