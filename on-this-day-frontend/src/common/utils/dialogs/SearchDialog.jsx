@@ -129,6 +129,13 @@ class SearchDialog extends React.Component {
 
 	render() {
 		const handleClose = () => { this.props.onClose() }
+		const handleSearch = () => {
+			this.setState({
+				monthValue: this.state.monthValue + 1
+			})
+
+			handleClose()
+		}
 
 		return (
 			<Modal show={this.props.show} onHide={handleClose}>
@@ -160,13 +167,13 @@ class SearchDialog extends React.Component {
 						</Form.Row>
 						<Form.Group controlId="searchKeywords">
 							<Form.Label>Keywords</Form.Label>
-							<Form.Control type="search" form="searchSubmitForm" />
+							<Form.Control disabled type="search" form="searchSubmitForm" />
 						</Form.Group>
 					</Form>
 				</Modal.Body>
 
 				<Modal.Footer>
-					<Form id="searchSubmitForm" onSubmit={handleClose}>
+					<Form id="searchSubmitForm" onClick={handleSearch}>
 						<Form.Group controlId="searchSubmit">
 							<Button
 								href={`/articles/filter/${JSON.stringify(this.state)}`}

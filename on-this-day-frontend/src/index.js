@@ -1,8 +1,6 @@
 import React from 'react'
 import ReactDOM from 'react-dom'
-import { BrowserRouter, Redirect, Route, Switch } from 'react-router-dom'
-
-import 'bootstrap/dist/css/bootstrap.min.css'
+import { BrowserRouter, Route, Switch } from 'react-router-dom'
 
 import AuthnData from './common/utils/authn/AuthnData'
 import NotFound from './common/utils/NotFound'
@@ -13,6 +11,9 @@ import CreateArticlePage from './pages/CreateArticle'
 
 import Navigation from './common/Navigation'
 import Footer from './common/Footer'
+
+
+import 'bootstrap/dist/css/bootstrap.min.css'
 
 
 /**
@@ -41,11 +42,24 @@ class App extends React.Component {
 				<Navigation />
 
 				<Switch>
-					<Route exact path={'/'} render={(props) => <Redirect to='/articles' />} />
+					<Route exact path={'/'} render={(props) => {
+						const today = new Date()
 
-					<Route exact path={'/articles'} render={(props) => <ArticlesPage filters={{}} title="All articles" {...props} />} />
+						return (
+							<ArticlesPage
+								filters={{
+									date: today.getDate(),
+									month: today.getMonth() + 1
+								}}
+								title={'On this day...'}
+								{...props} />)} } />
+
 					{/** @todo Accept query not JSON string. */}
-					<Route path={'/articles/filter/:filters'} render={(props) => <ArticlesPage filters={JSON.parse(props.match.params.filters)} title={`Filtered by ${props.match.params.filters}`} {...props} />} />
+					<Route path={'/articles/filter/:filters'} render={(props) =>
+						<ArticlesPage
+							filters={JSON.parse(props.match.params.filters)}
+							title={`Filtered by ${props.match.params.filters}`}
+							{...props} />} />
 
 					{/** @todo Rename to /articles/article-:id */}
 					<Route path={"/articles/article:id"} render={(props) => <ArticlePage id={props.match.params.id} {...props} />} />
