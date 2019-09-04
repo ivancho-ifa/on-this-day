@@ -1,5 +1,7 @@
 import React from 'react'
 
+import { Link, withRouter } from 'react-router-dom'
+
 import Button from 'react-bootstrap/Button'
 import Nav from 'react-bootstrap/Nav'
 import Navbar from 'react-bootstrap/Navbar'
@@ -21,10 +23,10 @@ import SearchDialog from './utils/dialogs/SearchDialog'
 function Navigation() {
 	return (
 		<Navbar bg="light">
-			<Navbar.Brand href="/">On This Day...</Navbar.Brand>
+			<Navbar.Brand><Link to="/">On This Day...</Link></Navbar.Brand>
 			<Nav>
 				<AuthnCond
-					authned={<Nav.Item><Nav.Link className="p-0 ml-2" href="/articles/createArticle"><Button variant="outline-primary">Create article</Button></Nav.Link></Nav.Item>}
+					authned={<Nav.Item><Link className="p-0 ml-2" to="/articles/createArticle"><Button variant="outline-primary">Create article</Button></Link></Nav.Item>}
 					unauthned={<React.Fragment />} />
 			</Nav>
 
@@ -53,4 +55,4 @@ function Navigation() {
 	)
 }
 
-export default Navigation
+export default withRouter(Navigation)

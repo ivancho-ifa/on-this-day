@@ -1,5 +1,7 @@
 import React from 'react'
 
+import { withRouter } from 'react-router-dom'
+
 import Button from 'react-bootstrap/Button'
 import Col from 'react-bootstrap/Col'
 import Form from 'react-bootstrap/Form'
@@ -65,6 +67,13 @@ class SearchDialog extends React.Component {
 			year: undefined,
 			keywords: undefined
 		}
+
+		this.handleSearch = this.handleSearch.bind(this)
+	}
+
+	handleSearch() {
+		this.props.history.push(`/articles/filter/${JSON.stringify(this.state)}`)
+		this.props.onClose()
 	}
 
 	handleChange(event) {
@@ -170,7 +179,7 @@ class SearchDialog extends React.Component {
 					<Form>
 						<Form.Group controlId="searchSubmit">
 							<Button
-								href={`/articles/filter/${JSON.stringify(this.state)}`}
+								onClick={this.handleSearch}
 								variant="primary">
 
 								Search
@@ -183,4 +192,4 @@ class SearchDialog extends React.Component {
 	}
 }
 
-export default SearchDialog
+export default withRouter(SearchDialog)

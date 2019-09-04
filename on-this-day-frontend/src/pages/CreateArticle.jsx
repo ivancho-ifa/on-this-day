@@ -77,7 +77,7 @@ class CreateArticle extends React.Component {
 			const newArticle = await response.json()
 
 			console.debug(newArticle._id)
-			window.location.href = `/articles/article${newArticle._id}`
+			this.props.history.push(`/articles/article${newArticle._id}`)
 		}
 
 		this.setState({validated: true})
