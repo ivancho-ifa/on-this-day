@@ -9,9 +9,9 @@ import ArticleComponent from '../components/Article'
 
 async function getArticleData(id, callback) {
 	const articleResponse = await fetch(`http://localhost:3003/articles/article-${id}`)
+
 	/** @todo Handle bad response. */
 	const article = await articleResponse.json()
-
 	callback(article)
 }
 

@@ -69,7 +69,37 @@ CLIENT.connect(error => {
 		})
 	})
 
+	server.post('/articles/add-article', (request, response) => {
+		const today = new Date()
+
+		/**
+		 * @todo Author.
+		 * @todo Rating.
+		 */
+
+		DB.collection('articles').insertOne({
+			title: request.body.title,
+			titleImageSrc: request.body.titleImageSrc,
+			titleImageCaption: request.body.titleImageCaption,
+			subtitle: request.body.subtitle,
+			content: request.body.content.split(/\n\r|\r\n|\n|\r/).filter(paragraph => paragraph !== ""),
+			author: "Umen Pichaga",
+			date: {
+				date: today.getDate(),
+				month: today.getMonth() + 1,
+				year: today.getFullYear()
+			},
+			rating: 0,
+			reviews: []
+		}, (error, result) => {
+			if (error) throw error
+
+			response.send({_id: result.insertedId})
+		})
+	})
+
 	server.get('/articles/article-:id', (request, response) => {
+		console.debug(request.params.id)
 		DB.collection('articles').findOne({_id: new ObjectID(request.params.id)}, (error, article) => {
 			if (error) throw error
 
@@ -84,8 +114,6 @@ CLIENT.connect(error => {
 		 * @todo Get author from token.
 		 * @todo Validate data.
 		 */
-
-
 
 		DB.collection('articles').updateOne({
 			_id: new ObjectID(request.params.id)

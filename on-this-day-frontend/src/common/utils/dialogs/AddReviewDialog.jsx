@@ -41,8 +41,6 @@ class AddReviewDialog extends React.Component {
 
 		const form = event.currentTarget
 
-		console.debug(form)
-
 		if (!!form.checkValidity()) {
 			/** @todo Do this smarter. Don't pass it in props. */
 			fetch(`http://localhost:3003/articles/article-${this.props.articleID}/add-review`, {

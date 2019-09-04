@@ -20,60 +20,97 @@ class CreateArticle extends React.Component {
 				value: "",
 				rows: 1
 			},
+			titleImageSrc: "",
+			titleImageCaption: {
+				value: "",
+				rows: 1
+			},
+
 			subtitle: {
 				value: "",
 				rows: 1
 			},
-			article: {
+			content: {
 				value: "",
 				rows: 10
-			}
+			},
+
+			validated: false
 		}
 
 		this.handleTextareaChange = this.handleTextareaChange.bind(this)
 		this.handleSubmit = this.handleSubmit.bind(this)
-
-		this.titleImage = React.createRef();
 	}
 
 	handleTextareaChange(event) {
+		const hasValue = event.target.name !== "titleImageSrc"
+
 		this.setState({
-			[event.target.name]: {
+			[event.target.name]: hasValue ? {
 				value: event.target.value
-			}
+			} : event.target.value
 		})
 	}
 
-	handleSubmit(event) {
+	async handleSubmit(event) {
 		event.preventDefault()
 
-		console.log(this.state)
-		console.log(this.titleImage.current.files[0])
+		const form = event.currentTarget
+
+		console.debug(form)
+
+		if (!!form.checkValidity()) {
+			const response = await fetch(`http://localhost:3003/articles/add-article`, {
+				method: 'POST',
+				headers: {
+					'Content-Type': 'application/json'
+				},
+				body: JSON.stringify({
+					title: this.state.title.value,
+					titleImageSrc: this.state.titleImageSrc,
+					titleImageCaption: this.state.titleImageCaption.value,
+					subtitle: this.state.subtitle.value,
+					content: this.state.content.value
+				})
+			})
+
+			const newArticle = await response.json()
+
+			console.debug(newArticle._id)
+			window.location.href = `/articles/article${newArticle._id}`
+		}
+
+		this.setState({validated: true})
 	}
 
 	render() {
 		return <Container className="pt-5 mt-5">
 			<Row className="justify-content-center">
 				<Col xl={8}>
-					<Form onSubmit={this.handleSubmit}>
+					<Form onSubmit={this.handleSubmit} validated={this.state.validated} >
 						<Form.Group controlId="title">
 							<Form.Label>Title</Form.Label>
-							<Form.Control as="textarea" name="title" onChange={this.handleTextareaChange} rows={this.state.title.rows} />
+							<Form.Control as="textarea" name="title" onChange={this.handleTextareaChange} required rows={this.state.title.rows} value={this.state.title.value} />
+						</Form.Group>
+
+						<Form.Group controlId="titleImageSrc">
+							<Form.Label>Title image URL</Form.Label>
+							<Form.Control name="titleImageSrc" onChange={this.handleTextareaChange} required type="url" value={this.state.titleImageSrc}/>
+						</Form.Group>
+
+						<Form.Group controlId="titleImageCaption">
+							<Form.Label>Title image caption</Form.Label>
+							<Form.Control as="textarea" name="titleImageCaption" onChange={this.handleTextareaChange} required rows={this.state.titleImageCaption.rows} value={this.state.titleImageCaption.value}/>
 						</Form.Group>
 
 						<Form.Group controlId="subtitle">
 							<Form.Label>Subtitle</Form.Label>
-							<Form.Control as="textarea" name="subtitle" onChange={this.handleTextareaChange} rows={this.state.subtitle.rows} />
+							<Form.Control as="textarea" name="subtitle" onChange={this.handleTextareaChange} required rows={this.state.subtitle.rows} value={this.state.subtitle.value} />
 						</Form.Group>
 
-						<Form.Group controlId="article">
-							<Form.Label>Article</Form.Label>
-							<Form.Control as="textarea" name="article" onChange={this.handleTextareaChange} rows={this.state.article.rows} />
-						</Form.Group>
-
-						<Form.Group controlId="titleImage">
-							<Form.Label>Title image</Form.Label>
-							<Form.Control accept="image/*" name="titleImage" ref={this.titleImage} type="file" />
+						<Form.Group controlId="content">
+							<Form.Label>Content</Form.Label>
+							<Form.Control as="textarea" name="content" onChange={this.handleTextareaChange} required rows={this.state.content.rows} value={this.state.content.value} />
 						</Form.Group>
 
 						<Form.Group>
