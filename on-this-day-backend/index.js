@@ -1,26 +1,28 @@
 const express = require('express')
 const cors = require('cors')
 const bodyParser = require('body-parser')
+const bcrypt = require('bcrypt')
+const jwt = require('jsonwebtoken')
+const cookieParser = require('cookie-parser');
 
 const MongoClient = require('mongodb').MongoClient
 const ObjectID = require('mongodb').ObjectID
 
 
+const authz = require('./authz')
+
+
 const server = express()
 
+
 server.use(bodyParser.json())
+
+server.use(cookieParser())
 
 server.use(cors({
 	origin: 'https://localhost:3000'
 }))
 
-server.post('/authn/facebook', (request, response) => {
-	if (false /** @todo Implement access token is not valid. */) {
-		response.sendStatus(401)
-	} else {
-		response.sendStatus(200)
-	}
-})
 
 /** @todo Move to utils. */
 
@@ -53,13 +55,61 @@ function filtersToDBQuery(filters) {
 	return query
 }
 
+
 const DB_URI = "mongodb+srv://IvanMollov:y3wBqxB10O@onthisday-gruiq.mongodb.net/on-this-day?retryWrites=true&w=majority"
 const CLIENT = new MongoClient(DB_URI, { useNewUrlParser: true, useUnifiedTopology: true })
+
+const SALT_ROUNDS = 10
+/** @todo Don't keep it here! */
+const SECRET = 'SUPERSECRET'
 
 CLIENT.connect(error => {
 	if (error) throw error
 
 	const DB = CLIENT.db("on-this-day")
+
+	server.post('/authn/sign-up', (request, response) => {
+		bcrypt.hash(request.body.password, SALT_ROUNDS,
+			async function(error, encryptedPassword) {
+				if (error) throw error
+
+				console.debug(encryptedPassword)
+
+				if (await DB.collection('users').find({email: request.body.email}).count() === 0) {
+					DB.collection('users').insertOne({
+						email: request.body.email,
+						password: encryptedPassword
+					})
+					response.sendStatus(200)
+				} else {
+					response.status(422).send(`Email ${request.body.email} is already signed-up!`)
+				}
+			})
+	})
+
+	server.post('/authn', (request, response) => {
+		DB.collection('users').findOne({email: request.body.email}, {projection: {password: true}}, (error, user) => {
+			if (error) throw error
+
+			if (user) {
+				bcrypt.compare(request.body.password, user.password, (error, isSame) => {
+					if (error) throw error
+
+					if (isSame) {
+						const payload = { email: request.body.email }
+						const token = jwt.sign(payload, SECRET, {
+							expiresIn: '1h'
+						})
+						response.cookie('token', token, { httpOnly: true }).sendStatus(200)
+					} else {
+						response.sendStatus(403)
+					}
+				})
+			} else {
+				response.sendStatus(403)
+			}
+		})
+	})
 
 	server.get('/articles', (request, response) => {
 		const query = filtersToDBQuery(request.query)
@@ -69,7 +119,7 @@ CLIENT.connect(error => {
 		})
 	})
 
-	server.post('/articles/add-article', (request, response) => {
+	server.post('/articles/add-article', authz, (request, response) => {
 		const today = new Date()
 
 		/**
@@ -107,7 +157,7 @@ CLIENT.connect(error => {
 		})
 	})
 
-	server.post('/articles/article-:id/add-review', (request, response) => {
+	server.post('/articles/article-:id/add-review', authz, (request, response) => {
 		const today = new Date()
 
 		/**
