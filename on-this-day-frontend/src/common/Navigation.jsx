@@ -25,6 +25,7 @@ function Navigation() {
 		<Navbar bg="light">
 			<Navbar.Brand><Link to="/">On This Day...</Link></Navbar.Brand>
 			<Nav>
+				<Nav.Item><Nav.Link href="/users">Our comunity</Nav.Link></Nav.Item>
 				<AuthnCond
 					authned={<Nav.Item><Link className="p-0 ml-2" to="/articles/createArticle"><Button variant="outline-primary">Create article</Button></Link></Nav.Item>}
 					unauthned={<React.Fragment />} />
