@@ -66,7 +66,11 @@ class AuthnDialog extends React.Component {
 
 			if (authnResponse.ok) {
 				sessionStorage.setItem('isAuthned', JSON.stringify(true))
+				const token = (await authnResponse.json()).token
+				sessionStorage.setItem('token', token)
+
 				this.context.setAuthnData({isAuthned: true})
+
 				this.props.onClose()
 			} else {
 				console.error('Authentication failed!')

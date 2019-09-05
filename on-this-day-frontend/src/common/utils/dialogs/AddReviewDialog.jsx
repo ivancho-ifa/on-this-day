@@ -1,5 +1,7 @@
 import React from 'react'
 
+import { withRouter } from 'react-router-dom'
+
 import Button from 'react-bootstrap/Button'
 import Form from 'react-bootstrap/Form'
 import Modal from 'react-bootstrap/Modal'
@@ -12,9 +14,9 @@ class AddReviewDialog extends React.Component {
 		super(props)
 
 		this.state = {
-			rating: undefined,
-			title: undefined,
-			review: undefined,
+			rating: "",
+			title: "",
+			review: "",
 
 			validated: false
 		}
@@ -46,7 +48,8 @@ class AddReviewDialog extends React.Component {
 			fetch(`http://localhost:3003/articles/article-${this.props.articleID}/add-review`, {
 				method: 'POST',
 				headers: {
-					'Content-Type': 'application/json'
+					'Content-Type': 'application/json',
+					'x-access-token': sessionStorage.getItem('token')
 				},
 				body: JSON.stringify({
 					rating: this.state.rating,
@@ -56,6 +59,7 @@ class AddReviewDialog extends React.Component {
 			})
 
 			this.handleClose()
+			this.props.history.go(0)
 		}
 
 		this.setState({validated: true})
@@ -145,4 +149,4 @@ class AddReviewDialog extends React.Component {
 	}
 }
 
-export default AddReviewDialog
+export default withRouter(AddReviewDialog)

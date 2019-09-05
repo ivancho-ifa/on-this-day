@@ -81,7 +81,7 @@ CLIENT.connect(error => {
 						const token = jwt.sign(payload, SECRET, {
 							expiresIn: '1h'
 						})
-						response.cookie('token', token, { httpOnly: true }).sendStatus(200)
+						response.send({token})
 					} else {
 						response.sendStatus(403)
 					}
@@ -109,6 +109,34 @@ CLIENT.connect(error => {
 					response.status(422).send(`Email ${request.body.email} is already signed-up!`)
 				}
 			})
+	})
+
+	server.post('/authn/token-check', authz, (request, response) => {
+		response.sendStatus(200)
+	})
+
+	server.get('/users', (request, response) => {
+		DB.collection('users').find({}, { projection: { _id: true }}).toArray((error, articlesIDs) => {
+			if (error) throw error
+
+			response.send(articlesIDs)
+		})
+	})
+
+	server.get('/users/user-:id', (request, response) => {
+		DB.collection('users').findOne({_id: new ObjectID(request.params.id)}, (error, article) => {
+			if (error) throw error
+
+			response.send(article)
+		})
+	})
+
+	server.get('/users/user-:id/edit-profile', authz, (request, response) => {
+		DB.collection('users').updateOne({_id: new ObjectID(request.params.id)}, (error, article) => {
+			if (error) throw error
+
+			response.send(article)
+		})
 	})
 
 	server.get('/articles', (request, response) => {
@@ -149,7 +177,6 @@ CLIENT.connect(error => {
 	})
 
 	server.get('/articles/article-:id', (request, response) => {
-		console.debug(request.params.id)
 		DB.collection('articles').findOne({_id: new ObjectID(request.params.id)}, (error, article) => {
 			if (error) throw error
 

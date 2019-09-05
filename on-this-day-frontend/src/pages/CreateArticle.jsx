@@ -67,7 +67,8 @@ class CreateArticle extends React.Component {
 			const response = await fetch(`http://localhost:3003/articles/add-article`, {
 				method: 'POST',
 				headers: {
-					'Content-Type': 'application/json'
+					'Content-Type': 'application/json',
+					'x-access-token': sessionStorage.getItem('token')
 				},
 				body: JSON.stringify({
 					title: this.state.title.value,

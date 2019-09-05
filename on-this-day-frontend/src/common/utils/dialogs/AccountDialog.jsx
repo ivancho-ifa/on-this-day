@@ -15,6 +15,7 @@ function AccountDialog(props) {
 	function handleLogOut() {
 		setAuthnData({isAuthned: false})
 		sessionStorage.removeItem('isAuthned')
+		sessionStorage.removeItem('token')
 		handleClose()
 	}
 
