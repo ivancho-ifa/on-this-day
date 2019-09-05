@@ -28,7 +28,7 @@ class App extends React.Component {
 
 		this.state = {
 			authnData: {
-				isAuthned: false
+				isAuthned: JSON.parse(sessionStorage.getItem('isAuthned')) || false
 			},
 			setAuthnData: (authnData) => {
 				this.setState({authnData})

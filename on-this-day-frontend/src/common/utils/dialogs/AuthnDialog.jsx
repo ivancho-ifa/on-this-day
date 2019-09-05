@@ -7,6 +7,8 @@ import Modal from 'react-bootstrap/Modal'
 import Nav from 'react-bootstrap/Nav'
 import Tab from 'react-bootstrap/Tab'
 
+import AuthnData from '../authn/AuthnData'
+
 
 /**
  * Authentication dialog.
@@ -37,6 +39,8 @@ class AuthnDialog extends React.Component {
 		this.handleSignUp = this.handleSignUp.bind(this)
 	}
 
+	static contextType = AuthnData
+
 	handleChange(event) {
 		this.setState({
 			[event.target.name]: event.target.value
@@ -62,10 +66,11 @@ class AuthnDialog extends React.Component {
 
 			if (authnResponse.ok) {
 				sessionStorage.setItem('isAuthned', JSON.stringify(true))
-				this.props.history.push('/');
+				this.context.setAuthnData({isAuthned: true})
+				this.props.onClose()
+			} else {
+				console.error('Authentication failed!')
 			}
-
-			this.props.onClose()
 		}
 
 	}
@@ -86,9 +91,8 @@ class AuthnDialog extends React.Component {
 
 		if (authnResponse.ok) {
 
+			this.props.onClose()
 		}
-
-		this.props.onClose()
 	}
 
 	render() {
