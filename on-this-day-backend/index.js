@@ -68,25 +68,6 @@ CLIENT.connect(error => {
 
 	const DB = CLIENT.db("on-this-day")
 
-	server.post('/authn/sign-up', (request, response) => {
-		bcrypt.hash(request.body.password, SALT_ROUNDS,
-			async function(error, encryptedPassword) {
-				if (error) throw error
-
-				console.debug(encryptedPassword)
-
-				if (await DB.collection('users').find({email: request.body.email}).count() === 0) {
-					DB.collection('users').insertOne({
-						email: request.body.email,
-						password: encryptedPassword
-					})
-					response.sendStatus(200)
-				} else {
-					response.status(422).send(`Email ${request.body.email} is already signed-up!`)
-				}
-			})
-	})
-
 	server.post('/authn', (request, response) => {
 		DB.collection('users').findOne({email: request.body.email}, {projection: {password: true}}, (error, user) => {
 			if (error) throw error
@@ -109,6 +90,25 @@ CLIENT.connect(error => {
 				response.sendStatus(403)
 			}
 		})
+	})
+
+	server.post('/authn/sign-up', (request, response) => {
+		bcrypt.hash(request.body.password, SALT_ROUNDS,
+			async function(error, encryptedPassword) {
+				if (error) throw error
+
+				console.debug(encryptedPassword)
+
+				if (await DB.collection('users').find({email: request.body.email}).count() === 0) {
+					DB.collection('users').insertOne({
+						email: request.body.email,
+						password: encryptedPassword
+					})
+					response.sendStatus(200)
+				} else {
+					response.status(422).send(`Email ${request.body.email} is already signed-up!`)
+				}
+			})
 	})
 
 	server.get('/articles', (request, response) => {

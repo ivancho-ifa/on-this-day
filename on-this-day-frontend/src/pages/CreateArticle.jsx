@@ -6,6 +6,10 @@ import Container from 'react-bootstrap/Container'
 import Form from 'react-bootstrap/Form'
 import Row from 'react-bootstrap/Row'
 
+import AuthnCond from '../common/utils/authn/AuthnCond'
+import AuthnDialog from '../common/utils/dialogs/AuthnDialog'
+import PopUpDialogManager from '../common/utils/PopUpDialogManager'
+
 
 /**
  * @todo Make "textarea"s auto resizable.
@@ -113,9 +117,16 @@ class CreateArticle extends React.Component {
 							<Form.Control as="textarea" name="content" onChange={this.handleTextareaChange} required rows={this.state.content.rows} value={this.state.content.value} />
 						</Form.Group>
 
-						<Form.Group>
-							<Button type="submit">Create article</Button>
-						</Form.Group>
+						<AuthnCond
+							authned={
+								<Form.Group>
+									<Button type="submit">Create article</Button>
+								</Form.Group>}
+
+							unauthned={<PopUpDialogManager
+								showDialog={false}
+								activator={<Button variant="secondary">Log-in to add this article</Button>}
+								dialog={<AuthnDialog />} />} />
 					</Form>
 				</Col>
 			</Row>

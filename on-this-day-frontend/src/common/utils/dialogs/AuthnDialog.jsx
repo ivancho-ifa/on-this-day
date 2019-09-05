@@ -1,15 +1,11 @@
 import React from 'react'
-import {useContext} from 'react'
+import { withRouter } from 'react-router-dom'
 
 import Button from 'react-bootstrap/Button'
 import Form from 'react-bootstrap/Form'
 import Modal from 'react-bootstrap/Modal'
 import Nav from 'react-bootstrap/Nav'
 import Tab from 'react-bootstrap/Tab'
-
-import FacebookLogin from 'react-facebook-login'
-
-import AuthnData from '../authn/AuthnData'
 
 
 /**
@@ -21,124 +17,162 @@ import AuthnData from '../authn/AuthnData'
  * @todo Make this class reusable for all kinds of dialogs.
  */
 
-function AuthnDialog(props) {
-	function handleClose() { props.onClose() }
+class AuthnDialog extends React.Component {
+	constructor(props) {
+		super(props)
 
-	const setAuthnData = useContext(AuthnData).setAuthnData
+		this.state = {
+			signInEmail: "",
+			signInPassword: "",
+			signUpEmail: "",
+			signUpPassword: "",
+			signUpPasswordConfirm: "",
 
-	async function facebookResponseHandler(fbResponse) {
-		const serverResponse = await fetch('http://localhost:3003/authn/facebook', {
-			method: 'POST',
-			headers: {
-				'Content-Type': 'application/json'
-			},
-			body: JSON.stringify({
-				accessToken: fbResponse.accessToken
-			})
-		})
-
-		if (serverResponse.ok) {
-			setAuthnData({isAuthned: true})
-			console.debug('Successfull authentication!')
-		} else {
-			console.error('Unsuccessfull authentication attempt!')
+			validatedSignIn: false,
+			validatedSignUp: false
 		}
 
-		console.debug(serverResponse)
+		this.handleChange = this.handleChange.bind(this)
+		this.handleSignIn = this.handleSignIn.bind(this)
+		this.handleSignUp = this.handleSignUp.bind(this)
 	}
 
-	return <Modal
-		show={props.show}
-		onHide={handleClose}>
+	handleChange(event) {
+		this.setState({
+			[event.target.name]: event.target.value
+		})
+	}
 
-		<Tab.Container defaultActiveKey="authn3rdParty">
-			<Modal.Header className="pb-0 mb-3 border-bottom-0">
-				<Nav fill variant="tabs" className="w-100 flex-row">
-					<Nav.Item><Nav.Link eventKey="authn3rdParty">Existing 3rd-party account</Nav.Link></Nav.Item>
-					<Nav.Item><Nav.Link disabled eventKey="signInEmail">Sign in</Nav.Link></Nav.Item>
-					<Nav.Item><Nav.Link disabled eventKey="signUpEmail">Sign up</Nav.Link></Nav.Item>
-				</Nav>
-			</Modal.Header>
+	async handleSignIn(event) {
+		event.preventDefault()
 
-			<Tab.Content>
-				<Tab.Pane eventKey="authn3rdParty">
-					<Modal.Body className="text-center">
-						<FacebookLogin
-							appId="505839750178336"
-							fields="name,email,picture"
-							callback={facebookResponseHandler}
-							onClick={handleClose}
-							icon="fa-facebook"/>
-					</Modal.Body>
-					<Modal.Footer></Modal.Footer>
-				</Tab.Pane>
+		const form = event.currentTarget
 
-				<Tab.Pane eventKey="signInEmail">
-					<Modal.Body>
-						<Form>
-							<Form.Group controlId="email">
-								<Form.Label>Email</Form.Label>
-								<Form.Control type="email" autoComplete="email" />
-							</Form.Group>
-							<Form.Group controlId="signInPassword">
-								<Form.Label>Password</Form.Label>
-								<Form.Control type="password" autoComplete="current-password" />
-							</Form.Group>
-						</Form>
-					</Modal.Body>
-					<Modal.Footer>
-						<Form>
-							<Form.Group
-								controlId="signInSubmit"
-								className="mb-0">
+		if (!!form.checkValidity()) {
+			const authnResponse = await fetch('http://localhost:3003/authn', {
+				method: 'POST',
+				body: JSON.stringify({
+					email: this.state.signInEmail,
+					password: this.state.signInPassword
+				}),
+				headers: {
+					'Content-Type': 'application/json'
+				}
+			})
 
-								<Button
-									variant="primary"
-									onClick={handleClose}>
+			if (authnResponse.ok) {
+				sessionStorage.setItem('isAuthned', JSON.stringify(true))
+				this.props.history.push('/');
+			}
 
-									Sign in
-								</Button>
-							</Form.Group>
-						</Form>
-					</Modal.Footer>
-				</Tab.Pane>
+			this.props.onClose()
+		}
 
-				<Tab.Pane eventKey="signUpEmail">
-					<Modal.Body>
-						<Form>
-							<Form.Group controlId="userEmail">
-								<Form.Label>User email</Form.Label>
-								<Form.Control type="email" autoComplete="email" />
-							</Form.Group>
-							<Form.Group controlId="signUpPassword">
-								<Form.Label>Password</Form.Label>
-								<Form.Control type="password" autoComplete="new-password" />
-							</Form.Group>
-							<Form.Group controlId="confirmPassword">
-								<Form.Label>Confirm password</Form.Label>
-								<Form.Control type="confirmPassword" autoComplete="new-password" />
-							</Form.Group>
-						</Form>
-					</Modal.Body>
-					<Modal.Footer>
-						<Form>
-							<Form.Group
-								controlId="signUpSubmit"
-								className="mb-0">
+	}
 
-								<Button
-									variant="primary"
-									onClick={handleClose}>
+	async handleSignUp(event) {
+		event.preventDefault()
 
-									Sign up
-								</Button>
-							</Form.Group>
-						</Form>
-					</Modal.Footer>
-				</Tab.Pane>
-			</Tab.Content>
-		</Tab.Container>
-	</Modal>
+		const authnResponse = await fetch('http://localhost:3003/authn/sign-up', {
+			method: 'POST',
+			body: JSON.stringify({
+				email: this.state.signUpEmail,
+				password: this.state.signUpPassword
+			}),
+			headers: {
+				'Content-Type': 'application/json'
+			}
+		})
+
+		if (authnResponse.ok) {
+
+		}
+
+		this.props.onClose()
+	}
+
+	render() {
+		return (
+		<Modal
+			show={this.props.show}
+			onHide={this.props.onClose}>
+
+			<Tab.Container defaultActiveKey="signInEmail">
+				<Modal.Header className="pb-0 mb-3 border-bottom-0">
+					<Nav fill variant="tabs" className="w-100 flex-row">
+						<Nav.Item><Nav.Link eventKey="signInEmail">Sign in</Nav.Link></Nav.Item>
+						<Nav.Item><Nav.Link eventKey="signUpEmail">Sign up</Nav.Link></Nav.Item>
+					</Nav>
+				</Modal.Header>
+
+				<Tab.Content>
+					<Tab.Pane eventKey="signInEmail">
+						<Modal.Body>
+							<Form>
+								<Form.Group controlId="email">
+									<Form.Label>Email</Form.Label>
+									<Form.Control name="signInEmail" value={this.state.signInEmail} onChange={this.handleChange} required form="signInForm" type="email" autoComplete="email" />
+								</Form.Group>
+								<Form.Group controlId="signInPassword">
+									<Form.Label>Password</Form.Label>
+									<Form.Control name="signInPassword" value={this.state.signInPassword} onChange={this.handleChange} required form="signInForm" type="password" autoComplete="current-password" />
+								</Form.Group>
+							</Form>
+						</Modal.Body>
+						<Modal.Footer>
+							<Form id="signInForm" validated={this.state.validatedSignIn} onSubmit={this.handleSignIn} >
+								<Form.Group
+									controlId="signInSubmit"
+									className="mb-0">
+
+									<Button
+										variant="primary"
+										type="submit">
+
+										Sign in
+									</Button>
+								</Form.Group>
+							</Form>
+						</Modal.Footer>
+					</Tab.Pane>
+
+					<Tab.Pane eventKey="signUpEmail">
+						<Modal.Body>
+							<Form>
+								<Form.Group controlId="userEmail">
+									<Form.Label>User email</Form.Label>
+									<Form.Control name="signUpEmail" value={this.state.signUpEmail} onChange={this.handleChange} required form="signUpForm" type="email" autoComplete="email" />
+								</Form.Group>
+								<Form.Group controlId="signUpPassword">
+									<Form.Label>Password</Form.Label>
+									<Form.Control name="signUpPassword" value={this.state.signUpPassword} onChange={this.handleChange} required form="signUpForm" type="password" autoComplete="new-password" />
+								</Form.Group>
+								<Form.Group controlId="confirmPassword">
+									<Form.Label>Confirm password</Form.Label>
+									<Form.Control name="signUpPasswordConfirm" value={this.state.signUpPasswordConfirm} onChange={this.handleChange} required form="signUpForm" type="password" autoComplete="new-password" />
+								</Form.Group>
+							</Form>
+						</Modal.Body>
+						<Modal.Footer>
+							<Form id="signUpForm" validated={this.state.validatedSignUp} onSubmit={this.handleSignUp} >
+								<Form.Group
+									controlId="signUpSubmit"
+									className="mb-0">
+
+									<Button
+										variant="primary"
+										type="submit">
+
+										Sign up
+									</Button>
+								</Form.Group>
+							</Form>
+						</Modal.Footer>
+					</Tab.Pane>
+				</Tab.Content>
+			</Tab.Container>
+		</Modal>)
+	}
 }
 
-export default AuthnDialog
+export default withRouter(AuthnDialog)
