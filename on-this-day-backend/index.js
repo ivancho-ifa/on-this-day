@@ -70,11 +70,18 @@ CLIENT.connect(error => {
 
 	server.post('/authn', (request, response) => {
 		DB.collection('users').findOne({email: request.body.email}, {projection: {password: true}}, (error, user) => {
-			if (error) throw error
+			if (error) {
+				response.sendStatus(500)
+				return console.error(error)
+			}
 
 			if (user) {
 				bcrypt.compare(request.body.password, user.password, (error, isSame) => {
-					if (error) throw error
+					if (error) {
+						console.error(error)
+						response.status(500).send(`Failed to compare hashes of passwords!`)
+						return
+					}
 
 					if (isSame) {
 						const payload = { email: request.body.email }
@@ -83,11 +90,11 @@ CLIENT.connect(error => {
 						})
 						response.send({token})
 					} else {
-						response.sendStatus(403)
+						response.status(403).send(`Failed to authenticate user with email ${request.body.email}`)
 					}
 				})
 			} else {
-				response.sendStatus(403)
+				response.status(403).send(`Tried to authenticate with not existing user with mail ${request.body.email}`)
 			}
 		})
 	})
@@ -95,7 +102,10 @@ CLIENT.connect(error => {
 	server.post('/authn/sign-up', (request, response) => {
 		bcrypt.hash(request.body.password, SALT_ROUNDS,
 			async function(error, encryptedPassword) {
-				if (error) throw error
+				if (error || !encryptedPassword) {
+					response.status(500).send(`Failed to hash password!`)
+					return console.error(error)
+				}
 
 				console.debug(encryptedPassword)
 
@@ -122,26 +132,71 @@ CLIENT.connect(error => {
 	})
 
 	server.get('/users', (request, response) => {
-		DB.collection('users').find({}, { projection: { _id: true }}).toArray((error, articlesIDs) => {
-			if (error) throw error
+		DB.collection('users').find({}, { projection: { _id: true }}).toArray((error, usersIDs) => {
+			if (error) {
+				response.sendStatus(500)
+				return console.error(error)
+			}
 
-			response.send(articlesIDs)
+			response.send(usersIDs)
 		})
 	})
 
 	server.get('/users/user-:id', (request, response) => {
-		DB.collection('users').findOne({_id: new ObjectID(request.params.id)}, (error, article) => {
-			if (error) throw error
+		DB.collection('users').findOne({_id: new ObjectID(request.params.id)}, (error, user) => {
+			if (error) {
+				response.sendStatus(500)
+				return console.error(error)
+			}
 
-			response.send(article)
+			if (!user) {
+				response.status(404).send(`User with ID ${request.params.id} not found!`)
+				return
+			}
+
+			response.send(user)
 		})
 	})
 
 	server.get('/users/user-:id/edit-profile', authz, (request, response) => {
-		DB.collection('users').updateOne({_id: new ObjectID(request.params.id)}, (error, article) => {
-			if (error) throw error
+		DB.collection('users').findOne({_id: new ObjectID(request.params.id)}, {projection: { email: true }}, (error, user) => {
+			if (error) {
+				response.sendStatus(500)
+				return console.error(error)
+			}
 
-			response.send(article)
+			if (!user) {
+				response.sendStatus(404)
+				return
+			}
+
+			console.debug(`user.email: ${user.email}, request.email: ${request.email}`)
+
+			if (user.email !== request.email) {
+				response.sendStatus(401)
+				return
+			}
+
+			let updateSpec = {}
+			if (request.body.name) updateSpec.name = request.body.name
+			if (request.body.profileImage) updateSpec.profileImage = request.body.profileImage
+			if (request.body.bio) updateSpec.bio = request.body.bio
+
+			DB.collection('users').updateOne({
+				_id: new Object(request.params.id)
+			}, {
+				$set: updateSpec
+			}, (error, result) => {
+				if (error) {
+					response.sendStatus(500)
+					return console.error(error)
+				}
+
+				if (!result) {
+					response.status(404).send(`User with ID ${request.params.id} not found!`)
+					return
+				}
+			})
 		})
 	})
 
@@ -149,6 +204,11 @@ CLIENT.connect(error => {
 		const query = filtersToDBQuery(request.query)
 
 		DB.collection('articles').find(query, { projection: { _id: true }}).toArray((error, articlesIDs) => {
+			if (error) {
+				response.sendStatus(500)
+				return console.error(error)
+			}
+
 			response.send(articlesIDs)
 		})
 	})
@@ -176,7 +236,15 @@ CLIENT.connect(error => {
 			rating: 0,
 			reviews: []
 		}, (error, result) => {
-			if (error) throw error
+			if (error) {
+				response.sendStatus(500)
+				return console.error(error)
+			}
+
+			if (!result) {
+				response.status(500).send(`Article with ID ${request.params.id} not found!`)
+				return
+			}
 
 			response.send({_id: result.insertedId})
 		})
@@ -184,7 +252,15 @@ CLIENT.connect(error => {
 
 	server.get('/articles/article-:id', (request, response) => {
 		DB.collection('articles').findOne({_id: new ObjectID(request.params.id)}, (error, article) => {
-			if (error) throw error
+			if (error) {
+				response.sendStatus(500)
+				return console.error(error)
+			}
+
+			if (!article) {
+				response.status(404).send(`Article with ID ${request.params.id} not found!`)
+				return
+			}
 
 			response.send(article)
 		})
@@ -215,7 +291,15 @@ CLIENT.connect(error => {
 				}
 			}
 		}, (error, result) => {
-			if (error) throw error
+			if (error) {
+				response.sendStatus(500)
+				return console.error(error)
+			}
+
+			if (!result) {
+				response.status(404).send(`Article with ID ${request.params.id} not found!`)
+				return
+			}
 
 			response.sendStatus(200)
 		})
