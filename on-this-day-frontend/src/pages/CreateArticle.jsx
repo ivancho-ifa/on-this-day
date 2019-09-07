@@ -42,14 +42,8 @@ class CreateArticle extends React.Component {
 			validated: false
 		}
 
-		this.abortController = new AbortController()
-
 		this.handleTextareaChange = this.handleTextareaChange.bind(this)
 		this.handleSubmit = this.handleSubmit.bind(this)
-	}
-
-	componentWillUnmount() {
-		this.abortController.abort()
 	}
 
 	handleTextareaChange(event) {
@@ -82,8 +76,7 @@ class CreateArticle extends React.Component {
 					titleImageCaption: this.state.titleImageCaption.value,
 					subtitle: this.state.subtitle.value,
 					content: this.state.content.value
-				}),
-				signal: this.abortController.signal
+				})
 			})
 
 			const newArticle = await response.json()
