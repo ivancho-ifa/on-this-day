@@ -14,10 +14,14 @@ const authz = function (request, response, next) {
 			if (error) {
 				response.status(401).send('Unauthorized: Invalid token')
 			} else {
-				request.email = decodedJWT.email
+				const authnData = {
+					userID: decodedJWT.userID
+				}
+				request.authnData = authnData
+
 				next()
 			}
-		});
+		})
 	}
 }
-module.exports = authz;
+module.exports = authz

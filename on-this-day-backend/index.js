@@ -20,7 +20,8 @@ server.use(bodyParser.json())
 server.use(cookieParser())
 
 server.use(cors({
-	origin: 'https://localhost:3000'
+	origin: 'https://localhost:3000',
+	credentials: true
 }))
 
 
@@ -69,7 +70,7 @@ CLIENT.connect(error => {
 	const DB = CLIENT.db("on-this-day")
 
 	server.post('/authn', (request, response) => {
-		DB.collection('users').findOne({email: request.body.email}, {projection: {password: true}}, (error, user) => {
+		DB.collection('users').findOne({ email: request.body.email }, { projection: { _id: true, password: true } }, (error, user) => {
 			if (error) {
 				response.sendStatus(500)
 				return console.error(error)
@@ -84,11 +85,8 @@ CLIENT.connect(error => {
 					}
 
 					if (isSame) {
-						const payload = { email: request.body.email }
-						const token = jwt.sign(payload, SECRET, {
-							expiresIn: '1h'
-						})
-						response.send({token})
+						const token = jwt.sign({ userID: user._id }, SECRET, { expiresIn: '1h' })
+						response.cookie('token', token, { httpOnly: true }).end()
 					} else {
 						response.status(403).send(`Failed to authenticate user with email ${request.body.email}`)
 					}

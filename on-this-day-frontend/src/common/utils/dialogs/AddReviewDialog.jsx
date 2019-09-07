@@ -21,9 +21,15 @@ class AddReviewDialog extends React.Component {
 			validated: false
 		}
 
+		this.abortController = new AbortController()
+
 		this.handleAddReview = this.handleAddReview.bind(this)
 		this.handleChange = this.handleChange.bind(this)
 		this.handleClose = this.handleClose.bind(this)
+	}
+
+	componentWillUnmount() {
+		this.abortController.abort()
 	}
 
 	handleClose() {
@@ -48,14 +54,15 @@ class AddReviewDialog extends React.Component {
 			fetch(`http://localhost:3003/articles/article-${this.props.articleID}/add-review`, {
 				method: 'POST',
 				headers: {
-					'Content-Type': 'application/json',
-					'x-access-token': sessionStorage.getItem('token')
+					'Content-Type': 'application/json'
 				},
+				credentials: 'include',
 				body: JSON.stringify({
 					rating: this.state.rating,
 					title: this.state.title,
 					review: this.state.review
-				})
+				}),
+				signal: this.abortController.signal
 			})
 
 			this.handleClose()

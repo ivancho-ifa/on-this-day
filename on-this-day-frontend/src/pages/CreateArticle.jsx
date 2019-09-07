@@ -42,8 +42,14 @@ class CreateArticle extends React.Component {
 			validated: false
 		}
 
+		this.abortController = new AbortController()
+
 		this.handleTextareaChange = this.handleTextareaChange.bind(this)
 		this.handleSubmit = this.handleSubmit.bind(this)
+	}
+
+	componentWillUnmount() {
+		this.abortController.abort()
 	}
 
 	handleTextareaChange(event) {
@@ -63,20 +69,21 @@ class CreateArticle extends React.Component {
 
 		console.debug(form)
 
-		if (!!form.checkValidity()) {
+		if (form.checkValidity()) {
 			const response = await fetch(`http://localhost:3003/articles/add-article`, {
 				method: 'POST',
 				headers: {
-					'Content-Type': 'application/json',
-					'x-access-token': sessionStorage.getItem('token')
+					'Content-Type': 'application/json'
 				},
+				credentials: 'include',
 				body: JSON.stringify({
 					title: this.state.title.value,
 					titleImageSrc: this.state.titleImageSrc,
 					titleImageCaption: this.state.titleImageCaption.value,
 					subtitle: this.state.subtitle.value,
 					content: this.state.content.value
-				})
+				}),
+				signal: this.abortController.signal
 			})
 
 			const newArticle = await response.json()

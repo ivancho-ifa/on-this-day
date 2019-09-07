@@ -55,6 +55,7 @@ class AuthnDialog extends React.Component {
 		if (!!form.checkValidity()) {
 			const authnResponse = await fetch('http://localhost:3003/authn', {
 				method: 'POST',
+				credentials: 'include',
 				body: JSON.stringify({
 					email: this.state.signInEmail,
 					password: this.state.signInPassword
@@ -66,9 +67,6 @@ class AuthnDialog extends React.Component {
 
 			if (authnResponse.ok) {
 				sessionStorage.setItem('isAuthned', JSON.stringify(true))
-				const token = (await authnResponse.json()).token
-				sessionStorage.setItem('token', token)
-
 				this.context.setAuthnData({isAuthned: true})
 
 				this.props.onClose()
@@ -94,7 +92,6 @@ class AuthnDialog extends React.Component {
 		})
 
 		if (authnResponse.ok) {
-
 			this.props.onClose()
 		}
 	}

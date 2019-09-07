@@ -13,9 +13,9 @@ function AccountDialog(props) {
 	const setAuthnData = useContext(AuthnData).setAuthnData
 
 	function handleLogOut() {
-		setAuthnData({isAuthned: false})
 		sessionStorage.removeItem('isAuthned')
-		sessionStorage.removeItem('token')
+		setAuthnData({isAuthned: false})
+
 		handleClose()
 	}
 
