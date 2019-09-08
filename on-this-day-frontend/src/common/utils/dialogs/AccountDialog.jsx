@@ -12,11 +12,18 @@ function AccountDialog(props) {
 
 	const setAuthnData = useContext(AuthnData).setAuthnData
 
-	function handleLogOut() {
-		sessionStorage.removeItem('isAuthned')
-		setAuthnData({isAuthned: false})
+	async function handleLogOut() {
+		const logOutResponse = await fetch('http://localhost:3003/authn/sign-out', {
+			method: 'POST',
+			credentials: 'include'
+		})
 
-		handleClose()
+		if (logOutResponse.ok || logOutResponse.status === 422) {
+			sessionStorage.removeItem('isAuthned')
+			setAuthnData({ isAuthned: false })
+
+			handleClose()
+		}
 	}
 
 	return <Modal

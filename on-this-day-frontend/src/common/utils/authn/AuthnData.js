@@ -5,7 +5,7 @@ const AuthnData = React.createContext({
 	authnData: {
 		isAuthned: JSON.parse(sessionStorage.getItem('isAuthned'))
 	},
-	setAuthnData: () => {}
+	setAuthnData: (authnData) => {}
 })
 
 export default AuthnData
