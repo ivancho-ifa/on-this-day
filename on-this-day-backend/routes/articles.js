@@ -77,6 +77,21 @@ router.get('/articles/article-:id', (request, response) => {
 	})
 })
 
+router.post('/articles/article-:id/edit', authz, (request, response) => {
+	const db = request.app.locals.db
+
+	db.collection('articles').updateOne({
+		_id: new ObjectID(request.params.id)
+	}, {
+		$set: request.body
+	}, (error, result) => {
+		if (error) return response.sendStatus(500) && console.error(error)
+		if (result.matchedCount !== 1) return response.sendStatus(404) && console.error(`User with ID ${request.params.id} not found!`)
+
+		response.sendStatus(200)
+	})
+})
+
 router.post('/articles/article-:id/add-review', authz, (request, response) => {
 	const db = request.app.locals.db
 
