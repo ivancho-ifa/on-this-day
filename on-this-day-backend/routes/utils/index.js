@@ -1,14 +1,5 @@
-function isEmptyObject(object) {
-	return Object.entries(object).length === 0 && object.constructor === Object
-}
-
 function filtersToDBQuery(filters) {
 	let query = {}
-
-	// If no filters, return empty query.
-	if (!filters || isEmptyObject(filters)) {
-		return query
-	}
 
 	// Add each filter to the query.
 	if (filters.date) {
@@ -29,6 +20,5 @@ function filtersToDBQuery(filters) {
 
 
 module.exports = {
-	isEmptyObject,
 	filtersToDBQuery
 }
