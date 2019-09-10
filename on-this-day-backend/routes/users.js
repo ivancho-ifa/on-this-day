@@ -20,12 +20,8 @@ router.get('/users/user-:id', (request, response) => {
 	db.collection('users').findOne({_id: new ObjectID(request.params.id)}, (error, user) => {
 		if (error) return utils.handleDBError(error, response)
 
-		if (!user) {
-			response.status(404).send(`User with ID ${request.params.id} not found!`)
-			return
-		}
-
-		response.send(user)
+		if (user) response.send(user)
+		else utils.respondAndLogError(response.status(404), `User with ID ${request.params.id} not found!`)
 	})
 })
 

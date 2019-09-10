@@ -44,12 +44,8 @@ router.post('/articles/add-article', authz, (request, response) => {
 	}, (error, result) => {
 		if (error) return utils.handleDBError(error, response)
 
-		if (!result) {
-			response.status(500).send(`Article with ID ${request.params.id} not found!`)
-			return
-		}
-
-		response.send({_id: result.insertedId})
+		if (result.ok) response.send({_id: result.insertedId})
+		else utils.respondAndLogError(response.status(500), 'Failed to insert a new article!')
 	})
 })
 
@@ -59,12 +55,8 @@ router.get('/articles/article-:id', (request, response) => {
 	db.collection('articles').findOne({_id: new ObjectID(request.params.id)}, (error, article) => {
 		if (error) return utils.handleDBError(error, response)
 
-		if (!article) {
-			response.status(404).send(`Article with ID ${request.params.id} not found!`)
-			return
-		}
-
-		response.send(article)
+		if (article) response.send(article)
+		else utils.handleArticleNotFound(request, response)
 	})
 })
 
@@ -77,9 +69,9 @@ router.post('/articles/article-:id/edit', authz, (request, response) => {
 		$set: request.body
 	}, (error, result) => {
 		if (error) return utils.handleDBError(error, response)
-		if (result.matchedCount !== 1) return response.status(404).send(`User with ID ${request.params.id} not found!`) && console.error(`User with ID ${request.params.id} not found!`)
 
-		response.status(204).end()
+		if (result.matchedCount === 1) response.status(204).end()
+		else utils.handleArticleNotFound(request, response)
 	})
 })
 
@@ -112,12 +104,8 @@ router.post('/articles/article-:id/add-review', authz, (request, response) => {
 	}, (error, result) => {
 		if (error) return utils.handleDBError(error, response)
 
-		if (!result) {
-			response.status(404).send(`Article with ID ${request.params.id} not found!`)
-			return
-		}
-
-		response.sendStatus(200)
+		if (result.result.ok) response.status(204).end()
+		else utils.handleArticleNotFound(request, response)
 	})
 })
 

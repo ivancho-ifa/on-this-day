@@ -22,13 +22,22 @@ function handleDBError(error, response) {
 	return response.status(500).send(`DB error occured!`) && console.error(error)
 }
 
-function handleRequestError() {
+function respondAndLogError(response, responseMessage, responseStatus, logMessage) {
+	if (!logMessage) logMessage = responseMessage
+	if (responseStatus) response.status(responseStatus)
 
+	response.send(responseMessage)
+	console.error(logMessage)
+}
+
+function handleArticleNotFound(request, response) {
+	respondAndLogError(response.status(404), `Article with ID ${request.params.id} not found!`)
 }
 
 
 module.exports = {
 	filtersToDBQuery,
+	handleArticleNotFound,
 	handleDBError,
-	handleRequestError
+	respondAndLogError
 }
