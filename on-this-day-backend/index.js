@@ -5,6 +5,7 @@ const cookieParser = require('cookie-parser')
 const server = require('express')()
 
 const config = require('./config')
+const errorHandlers = require('./utils/errorHandlers')
 
 
 /*
@@ -22,6 +23,11 @@ server.use(cors({
 }))
 
 server.use(require('./routes'))
+
+
+server.use(errorHandlers.log)
+
+server.use(errorHandlers.respond)
 
 /*
  * } Sets-up middleware.
