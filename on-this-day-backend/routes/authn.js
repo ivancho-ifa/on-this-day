@@ -72,7 +72,7 @@ router.post('/authn/sign-out', authz, (request, response) => {
 
 
 router.post('/authn/token-check', authz, (request, response) => {
-	response.sendStatus(200)
+	response.send(204).end()
 })
 
 
