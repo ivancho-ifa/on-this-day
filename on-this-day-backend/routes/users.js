@@ -1,27 +1,27 @@
 const router = require('express').Router()
 const ObjectID = require('mongodb').ObjectID
 
-const utils = require('./utils')
+const errors = require('./utils/errors')
 
 
-router.get('/users', (request, response) => {
+router.get('/users', (request, response, next) => {
 	const db = request.app.locals.db
 
 	db.collection('users').find({}, { projection: { _id: true }}).toArray((error, usersIDs) => {
-		if (error) return utils.handleDBError(error, response)
+		if (error) return next(error)
 
-		response.send(usersIDs)
+		return response.send(usersIDs)
 	})
 })
 
-router.get('/users/user-:id', (request, response) => {
+router.get('/users/user-:id', (request, response, next) => {
 	const db = request.app.locals.db
 
 	db.collection('users').findOne({_id: new ObjectID(request.params.id)}, (error, user) => {
-		if (error) return utils.handleDBError(error, response)
+		if (error) return next(error)
+		if (!user) return next(new errors.RequestHandlingError(404, `User with ID ${request.params.id} not found!`))
 
-		if (user) response.send(user)
-		else utils.respondAndLogError(response.status(404), `User with ID ${request.params.id} not found!`)
+		return response.send(user)
 	})
 })
 
