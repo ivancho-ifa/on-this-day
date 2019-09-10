@@ -20,7 +20,7 @@ const authz = function (request, response, next) {
 		const authnData = { userID: decodedJWT.userID }
 		request.authnData = authnData
 
-		next()
+		return next()
 	})
 }
 

@@ -24,7 +24,7 @@ router.post('/authn', (request, response, next) => {
 			if (!passwordMatch) return next(new errors.RequestHandlingError(403, `Failed to authenticate user with ID ${user._id}`))
 
 			const token = jwt.sign({ userID: user._id }, config.JWTSecret, { expiresIn: '1m' })
-			response.cookie('token', token, { httpOnly: true }).end()
+			return response.cookie('token', token, { httpOnly: true }).end()
 		})
 	})
 })
@@ -58,19 +58,19 @@ router.post('/authn/sign-up', (request, response, next) => {
 				if (error) return next(error)
 				if (!result.result.ok) return next(new errors.RequestHandlingError(500, `Failed to create new user with email ${request.body.email}`))
 
-				response.status(204).end()
+				return response.status(204).end()
 			})
 		})
 })
 
 
 router.post('/authn/sign-out', authz, (request, response) => {
-	response.clearCookie('token', { httpOnly: true }).end()
+	return response.clearCookie('token', { httpOnly: true }).end()
 })
 
 
 router.post('/authn/token-check', authz, (request, response) => {
-	response.send(204).end()
+	return response.send(204).end()
 })
 
 
