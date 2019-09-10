@@ -7,9 +7,8 @@ const router = require('express').Router()
 
 const authz = require('./utils/authz')
 const config = require('../config')
+const consts = require('./utils/consts')
 const errors = require('./utils/errors')
-
-const SALT_ROUNDS = 10
 
 
 router.post('/authn', (request, response, next) => {
@@ -17,7 +16,7 @@ router.post('/authn', (request, response, next) => {
 
 	db.collection('users').findOne({ email: request.body.email }, { projection: { _id: true, password: true } }, (error, user) => {
 		if (error) return next(error)
-		if (!user) return next(new errors.RequestHandlingError(403, `Unsuccessful attempt to authenticate with not existing user with mail ${request.body.email}`))
+		if (!user) return next(new errors.RequestHandlingError(403, `Unsuccessful attempt to authenticate with not existing user with email ${request.body.email}`))
 
 		bcrypt.compare(request.body.password, user.password, (error, passwordMatch) => {
 			if (error) return next(error)
@@ -40,7 +39,7 @@ router.post('/authn/sign-up', (request, response, next) => {
 	if (request.body.password !== request.body.passwordConfirmation)
 		return next(new errors.RequestHandlingError(422, `Failed to create new user with email ${request.body.email}! Password confirmation failed!`))
 
-	bcrypt.hash(request.body.password, SALT_ROUNDS,
+	bcrypt.hash(request.body.password, consts.saltRounds,
 		async function(error, encryptedPassword) {
 			if (error) return next(error)
 			if (!encryptedPassword) return next(new errors.RequestHandlingError(500, 'Failed to hash password!'))
