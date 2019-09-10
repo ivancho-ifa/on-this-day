@@ -11,7 +11,16 @@ class RequestHandlingError extends Error {
 	}
 }
 
+class ArticleNotFound extends RequestHandlingError {
+	constructor(id, ...params) {
+		super(404, `Article with ID ${id} not found!`, ...params)
+
+		this.name = 'ArticleNotFound'
+	}
+}
+
 
 module.exports = {
+	ArticleNotFound,
 	RequestHandlingError
 }
