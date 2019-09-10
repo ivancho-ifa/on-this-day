@@ -11,10 +11,7 @@ router.get('/articles', (request, response) => {
 	const query = utils.filtersToDBQuery(request.query)
 
 	db.collection('articles').find(query, { projection: { _id: true }}).toArray((error, articlesIDs) => {
-		if (error) {
-			response.sendStatus(500)
-			return console.error(error)
-		}
+		if (error) return utils.handleDBError(error, response)
 
 		response.send(articlesIDs)
 	})
@@ -45,10 +42,7 @@ router.post('/articles/add-article', authz, (request, response) => {
 		rating: 0,
 		reviews: []
 	}, (error, result) => {
-		if (error) {
-			response.sendStatus(500)
-			return console.error(error)
-		}
+		if (error) return utils.handleDBError(error, response)
 
 		if (!result) {
 			response.status(500).send(`Article with ID ${request.params.id} not found!`)
@@ -63,10 +57,7 @@ router.get('/articles/article-:id', (request, response) => {
 	const db = request.app.locals.db
 
 	db.collection('articles').findOne({_id: new ObjectID(request.params.id)}, (error, article) => {
-		if (error) {
-			response.sendStatus(500)
-			return console.error(error)
-		}
+		if (error) return utils.handleDBError(error, response)
 
 		if (!article) {
 			response.status(404).send(`Article with ID ${request.params.id} not found!`)
@@ -85,10 +76,10 @@ router.post('/articles/article-:id/edit', authz, (request, response) => {
 	}, {
 		$set: request.body
 	}, (error, result) => {
-		if (error) return response.sendStatus(500) && console.error(error)
-		if (result.matchedCount !== 1) return response.sendStatus(404) && console.error(`User with ID ${request.params.id} not found!`)
+		if (error) return utils.handleDBError(error, response)
+		if (result.matchedCount !== 1) return response.status(404).send(`User with ID ${request.params.id} not found!`) && console.error(`User with ID ${request.params.id} not found!`)
 
-		response.sendStatus(200)
+		response.status(204).end()
 	})
 })
 
@@ -119,10 +110,7 @@ router.post('/articles/article-:id/add-review', authz, (request, response) => {
 			}
 		}
 	}, (error, result) => {
-		if (error) {
-			response.sendStatus(500)
-			return console.error(error)
-		}
+		if (error) return utils.handleDBError(error, response)
 
 		if (!result) {
 			response.status(404).send(`Article with ID ${request.params.id} not found!`)

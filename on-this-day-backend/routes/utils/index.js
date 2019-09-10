@@ -18,7 +18,17 @@ function filtersToDBQuery(filters) {
 	return query
 }
 
+function handleDBError(error, response) {
+	return response.status(500).send(`DB error occured!`) && console.error(error)
+}
+
+function handleRequestError() {
+
+}
+
 
 module.exports = {
-	filtersToDBQuery
+	filtersToDBQuery,
+	handleDBError,
+	handleRequestError
 }
