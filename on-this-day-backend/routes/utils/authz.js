@@ -1,7 +1,6 @@
 const jwt = require('jsonwebtoken')
 
-
-const secret = 'SUPERSECRET'
+const config = require('../../config')
 
 
 const authz = function (request, response, next) {
@@ -10,7 +9,7 @@ const authz = function (request, response, next) {
 	if (!token) {
 		response.status(401).send('Unauthorized: No token provided')
 	} else {
-		jwt.verify(token, secret, function (error, decodedJWT) {
+		jwt.verify(token, config.JWTSecret, function (error, decodedJWT) {
 			if (!error) {
 				const authnData = {
 					userID: decodedJWT.userID

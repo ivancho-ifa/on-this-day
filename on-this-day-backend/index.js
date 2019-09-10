@@ -4,6 +4,8 @@ const cookieParser = require('cookie-parser')
 
 const server = require('express')()
 
+const config = require('./config')
+
 
 /*
  * -----------------------------------------------------------------------------
@@ -32,10 +34,8 @@ server.use(require('./routes'))
  * Starts server. {
  */
 
-const dbURI = "mongodb+srv://IvanMollov:y3wBqxB10O@onthisday-gruiq.mongodb.net/on-this-day?retryWrites=true&w=majority"
-
 const MongoClient = require('mongodb').MongoClient
-const client = new MongoClient(dbURI, { useNewUrlParser: true, useUnifiedTopology: true })
+const client = new MongoClient(config.mongoConnectionURI, { useNewUrlParser: true, useUnifiedTopology: true })
 
 client.connect(error => {
 	if (error) return console.error(error)

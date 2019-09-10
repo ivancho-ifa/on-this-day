@@ -6,11 +6,10 @@ const router = require('express').Router()
 
 
 const authz = require('./utils/authz')
+const config = require('../config')
 const utils = require('./utils')
 
 const SALT_ROUNDS = 10
-/** @todo Don't keep it here! */
-const SECRET = 'SUPERSECRET'
 
 
 router.post('/authn', (request, response) => {
@@ -24,7 +23,7 @@ router.post('/authn', (request, response) => {
 				if (error) return utils.respondAndLogError(response, 'Failed to compare hashes of passwords!', 500, error)
 
 				if (passwordMatch) {
-					const token = jwt.sign({ userID: user._id }, SECRET, { expiresIn: '1m' })
+					const token = jwt.sign({ userID: user._id }, config.JWTSecret, { expiresIn: '1m' })
 					response.cookie('token', token, { httpOnly: true }).end()
 				} else utils.respondAndLogError(response.status(403), `Failed to authenticate user with ID ${user._id}`)
 			})
