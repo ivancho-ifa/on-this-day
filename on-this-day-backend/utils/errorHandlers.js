@@ -5,9 +5,11 @@ function log (error, request, response, next) {
 }
 
 function respond(error, request, response, next) {
-	const status = error.status || 500
+	response.status(error.status || 500)
 
-	response.status(status).send({
+	if (!error.message) return response.end()
+
+	response.send({
 		message: error.message
 	})
 }
