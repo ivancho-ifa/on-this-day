@@ -8,7 +8,7 @@ const router = require('express').Router()
 const authz = require('./utils/authz')
 const config = require('../config')
 const consts = require('./utils/consts')
-const errors = require('./utils/errors')
+const errors = require('../utils/errors')
 
 
 router.post('/authn', (request, response, next) => {

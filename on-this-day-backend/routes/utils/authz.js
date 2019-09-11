@@ -1,7 +1,7 @@
 const jwt = require('jsonwebtoken')
 
 const config = require('../../config')
-const errors = require('../utils/errors')
+const errors = require('../../utils/errors')
 
 
 const authz = function (request, response, next) {

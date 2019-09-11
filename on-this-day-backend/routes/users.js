@@ -1,7 +1,7 @@
 const router = require('express').Router()
 const ObjectID = require('mongodb').ObjectID
 
-const errors = require('./utils/errors')
+const errors = require('../utils/errors')
 
 
 router.get('/users', (request, response, next) => {
