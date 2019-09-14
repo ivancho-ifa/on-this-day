@@ -1,7 +1,7 @@
 {
-	"main": "index.js",
 	"name": "on-this-day-backend",
 	"version": "0.1.0",
+	"description": "Website for learning about historic events. // Backend",
 	"dependencies": {
 		"bcrypt": "^3.0.6",
 		"body-parser": "^1.19.0",
@@ -14,7 +14,18 @@
 	"devDependencies": {
 		"nodemon": "^1.19.1"
 	},
+	"main": "index.js",
 	"scripts": {
 		"start": "nodemon index.js"
-	}
+	},
+	"repository": {
+		"type": "git",
+		"url": "https://github.com/ivancho-ifa/on-this-day.git"
+	},
+	"author": "Ivan Mollov",
+	"license": "ISC",
+	"bugs": {
+		"url": "https://github.com/ivancho-ifa/on-this-day/issues"
+	},
+	"homepage": "https://github.com/ivancho-ifa/on-this-day#readme"
 }

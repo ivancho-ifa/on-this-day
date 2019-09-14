@@ -1,0 +1,26 @@
+{
+	"name": "on-this-day",
+	"version": "0.1.0",
+	"description": "Website for learning about historic events.",
+	"scripts": {
+		"postinstall": "subpkg install",
+		"start": "subpkg start"
+	},
+	"repository": {
+		"type": "git",
+		"url": "git+https://github.com/ivancho-ifa/on-this-day.git"
+	},
+	"author": "Ivan Mollov",
+	"license": "ISC",
+	"bugs": {
+		"url": "https://github.com/ivancho-ifa/on-this-day/issues"
+	},
+	"homepage": "https://github.com/ivancho-ifa/on-this-day#readme",
+	"devDependencies": {
+		"subpackage": "^1.1.0"
+	},
+	"subPackages": [
+		"on-this-day-backend",
+		"on-this-day-frontend"
+	]
+}
