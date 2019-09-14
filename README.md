@@ -30,8 +30,8 @@ cd on-this-day-backend
 # Create a file ./config.js with content:
 #
 # module.exports = {
-#     JWTSecret: 'A JWT secret',
-#     mongoConnectionURI: 'A MongoDB connection URI' 
+# 	JWTSecret: 'A JWT secret',
+# 	mongoConnectionURI: 'A MongoDB connection URI'
 # }
 #
 npm start
