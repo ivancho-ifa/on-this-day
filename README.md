@@ -29,11 +29,10 @@ Running the project in delopment environment:
 cd on-this-day-backend
 # Create a file ./config.js with content:
 #
-# const JWTSecret = <REPLACE WITH JWT SECRET>
-# const mongoConnectionURI = <REPLACE WITH MONGO DB CONNECTION URI>
-# 
-#
-# module.exports = { JWTSecret, mongoConnectionURI }
+# module.exports = {
+#     JWTSecret: 'A JWT secret',
+#     mongoConnectionURI: 'A MongoDB connection URI' 
+# }
 #
 npm start
 ```
