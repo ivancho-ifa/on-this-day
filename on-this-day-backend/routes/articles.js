@@ -18,15 +18,10 @@ router.get('/articles', (request, response, next) => {
 	})
 })
 
-router.post('/articles/add-article', authz, (request, response, next) => {
+router.post('/articles/add-article', authz, async (request, response, next) => {
 	const db = request.app.locals.db
 
 	const today = new Date()
-
-	/**
-	 * @todo Author.
-	 * @todo Rating.
-	 */
 
 	db.collection('articles').insertOne({
 		title: request.body.title,
@@ -38,7 +33,8 @@ router.post('/articles/add-article', authz, (request, response, next) => {
 			date: today.getDate(),
 			month: today.getMonth() + 1,
 			year: today.getFullYear()
-		}
+		},
+		authorID: new ObjectID(request.authnData.userID)
 	}, (error, result) => {
 		if (error) return next(error)
 		if (!result.ok) return next(new errors.RequestHandlingError(500, 'Failed to insert a new article!'))
@@ -73,13 +69,12 @@ router.post('/articles/article-:id/edit', authz, (request, response, next) => {
 	})
 })
 
-router.post('/articles/article-:id/add-review', authz, (request, response, next) => {
+router.post('/articles/article-:id/add-review', authz, async (request, response, next) => {
 	const db = request.app.locals.db
 
 	const today = new Date()
 
 	/**
-	 * @todo Get author from token.
 	 * @todo Validate data.
 	 */
 
@@ -88,7 +83,7 @@ router.post('/articles/article-:id/add-review', authz, (request, response, next)
 	}, {
 		$push: {
 			reviews: {
-				author: "Nqkoi Pichaga",
+				author: new ObjectID(request.authnData.userID),
 				date: {
 					date: today.getDate(),
 					month: today.getMonth() + 1,
