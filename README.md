@@ -17,7 +17,9 @@ Getting the project:
 3. Install the project
 ```bash
 git clone https://github.com/ivancho-ifa/on-this-day.git # 1
-cd on-this-day                                           # 2
+cd on-this-day/on-this-day-backend                       # 2
+npm install                                              # 3
+cd on-this-day/on-this-day-frontend                      # 2
 npm install                                              # 3
 ```
 
@@ -25,9 +27,15 @@ Running the project in delopment environment:
 ```bash
 # From the project folder:
 cd on-this-day-backend
-node index.js
+# Create a file ./config.js with content:
+#
+# module.exports = {
+# 	JWTSecret: 'A JWT secret',
+# 	mongoConnectionURI: 'A MongoDB connection URI'
+# }
+#
+npm start
 ```
-You can install [nodemon](https://www.npmjs.com/package/nodemon) and run the backend by running `nodemon index.js` instead of `node index.js`. With `nodemon` server will restart automatically when a file from the backend is changed.
 ```bash
 # From the project folder:
 cd on-this-day-frontend

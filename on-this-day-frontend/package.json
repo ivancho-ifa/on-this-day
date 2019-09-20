@@ -1,6 +1,7 @@
 {
 	"name": "on-this-day-frontend",
 	"version": "0.1.0",
+	"description": "Website for learning about historic events. // Frontend",
 	"private": true,
 	"dependencies": {
 		"bootstrap": "^4.3.1",
@@ -31,5 +32,15 @@
 			"last 1 firefox version",
 			"last 1 safari version"
 		]
-	}
+	},
+	"repository": {
+		"type": "git",
+		"url": "git+https://github.com/ivancho-ifa/on-this-day.git"
+	},
+	"author": "Ivan Mollov",
+	"license": "ISC",
+	"bugs": {
+		"url": "https://github.com/ivancho-ifa/on-this-day/issues"
+	},
+	"homepage": "https://github.com/ivancho-ifa/on-this-day#readme"
 }

@@ -1,2 +1,5 @@
 # IDEs
 /.vscode
+
+# dependencies
+/node_modules
