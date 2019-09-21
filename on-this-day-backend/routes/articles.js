@@ -3,25 +3,39 @@ const ObjectID = require('mongodb').ObjectID
 
 const authz = require('./utils/authz')
 const errors = require('../utils/errors')
-const utils = require('./utils')
 
 
 router.get('/articles', (request, response, next) => {
 	const db = request.app.locals.db
 
-	const query = utils.filtersToDBQuery(request.query)
+	let query = request.query
+	for (var key in query)
+		if (query.hasOwnProperty(key))
+			query[key] = Number(query[key])
 
-	db.collection('articles').find(query, { projection: { _id: true }}).toArray((error, articlesIDs) => {
+	db.collection('articles').aggregate([{
+		$project: {
+			'date': { $dayOfMonth: '$date' },
+			'month': { $month: '$date' },
+			'year': { $year: '$date' }
+		}}, {
+		$match: query }, {
+		$project: {
+			'_id': { $toObjectId: '$_id' }
+		}
+	}], (error, cursor) => {
 		if (error) return next(error)
 
-		response.send(articlesIDs)
+		cursor.toArray((error, articlesIDs) => {
+			if (error) return next(error)
+
+			return response.send(articlesIDs)
+		})
 	})
 })
 
 router.post('/articles/add-article', authz, async (request, response, next) => {
 	const db = request.app.locals.db
-
-	const today = new Date()
 
 	db.collection('articles').insertOne({
 		title: request.body.title,
@@ -29,15 +43,11 @@ router.post('/articles/add-article', authz, async (request, response, next) => {
 		titleImageCaption: request.body.titleImageCaption,
 		subtitle: request.body.subtitle,
 		content: request.body.content.split(/\n\r|\r\n|\n|\r/).filter(paragraph => paragraph !== ""),
-		date: {
-			date: today.getDate(),
-			month: today.getMonth() + 1,
-			year: today.getFullYear()
-		},
+		date: new Date(),
 		authorID: new ObjectID(request.authnData.userID)
 	}, (error, result) => {
 		if (error) return next(error)
-		if (!result.ok) return next(new errors.RequestHandlingError(500, 'Failed to insert a new article!'))
+		if (!result.result.ok) return next(new errors.RequestHandlingError(500, 'Failed to insert a new article!'))
 
 		return response.send({_id: result.insertedId})
 	})
@@ -84,11 +94,7 @@ router.post('/articles/article-:id/add-review', authz, async (request, response,
 		$push: {
 			reviews: {
 				author: new ObjectID(request.authnData.userID),
-				date: {
-					date: today.getDate(),
-					month: today.getMonth() + 1,
-					year: today.getFullYear()
-				},
+				date: new Date(),
 				rating: request.body.rating,
 				title: request.body.title,
 				review: request.body.review
