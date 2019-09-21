@@ -22,7 +22,7 @@ router.post('/authn', (request, response, next) => {
 			if (error) return next(error)
 			if (!passwordMatch) return next(new errors.RequestHandlingError(403, `Failed to authenticate user with ID ${user._id}`))
 
-			const token = jwt.sign({ userID: user._id }, config.JWTSecret, { expiresIn: '1m' })
+			const token = jwt.sign({ userID: user._id }, config.JWTSecret, { expiresIn: '1h' })
 			return response.cookie('token', token, { httpOnly: true }).end()
 		})
 	})
