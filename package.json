@@ -4,7 +4,9 @@
 	"description": "Website for learning about historic events.",
 	"scripts": {
 		"postinstall": "subpkg install",
-		"start": "subpkg start"
+		"start": "subpkg start",
+		"start-backend": "cd ./on-this-day-backend && npm start",
+		"start-frontend": "cd ./on-this-day-frontend && npm start"
 	},
 	"repository": {
 		"type": "git",

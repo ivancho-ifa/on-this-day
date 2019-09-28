@@ -23,21 +23,16 @@ cd on-this-day/on-this-day-frontend                      # 2
 npm install                                              # 3
 ```
 
-Running the project in delopment environment:
+Running the project in development environment:
 ```bash
-# From the project folder:
-cd on-this-day-backend
-# Create a file ./config.js with content:
-#
+# In the project folder create a file ./on-this-day-backend/config.js with content:
 # module.exports = {
 # 	JWTSecret: 'A JWT secret',
 # 	mongoConnectionURI: 'A MongoDB connection URI'
 # }
-#
-npm start
+npm run start-backend
 ```
 ```bash
-# From the project folder:
-cd on-this-day-frontend
-npm start
+# From the project folder
+npm run start-frontend
 ```
