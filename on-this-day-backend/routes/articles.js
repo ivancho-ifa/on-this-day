@@ -1,99 +1,114 @@
+/**
+ * @todo Document.
+ */
+
 const router = require('express').Router()
-const ObjectID = require('mongodb').ObjectID
+const mongodb = require('mongodb')
 
 const authz = require('./utils/authz')
 const errors = require('../utils/errors')
 
 
-router.get('/articles', (request, response, next) => {
-	const db = request.app.locals.db
+router.get('/articles', async (request, response, next) => {
+	/**
+	 * @todo Extract query parsing to an util function.
+	 * @todo Implement query by keywords.
+	 */
 
-	let query = request.query
-	for (var key in query)
-		if (query.hasOwnProperty(key))
-			query[key] = Number(query[key])
+	try {
+		let criteria = request.query
+		for (var key in criteria)
+			if (criteria.hasOwnProperty(key))
+				criteria[key] = Number(criteria[key])
 
-	db.collection('articles').aggregate([{
-		$project: {
-			'date': { $dayOfMonth: '$date' },
-			'month': { $month: '$date' },
-			'year': { $year: '$date' }
-		}}, {
-		$match: query }, {
-		$project: {
-			'_id': { $toObjectId: '$_id' }
-		}
-	}], (error, cursor) => {
-		if (error) return next(error)
+		let matchedArticles = await request.app.locals.articles.getArticles(criteria)
+		matchedArticles = await matchedArticles.toArray()
 
-		cursor.toArray((error, articlesIDs) => {
-			if (error) return next(error)
-
-			return response.send(articlesIDs)
-		})
-	})
+		return response.send(matchedArticles)
+	} catch (error) {
+		return next(error)
+	}
 })
+
+
+/**
+ * @todo Implement separate "creation date" and "about date".
+ * @todo Implement rich text parsing.
+ */
 
 router.post('/articles/add-article', authz, async (request, response, next) => {
-	const db = request.app.locals.db
+	try {
+		let articleData = request.body
+		articleData.authorID = request.authnData.userID
 
-	db.collection('articles').insertOne({
-		title: request.body.title,
-		titleImageSrc: request.body.titleImageSrc,
-		titleImageCaption: request.body.titleImageCaption,
-		subtitle: request.body.subtitle,
-		content: request.body.content.split(/\n\r|\r\n|\n|\r/).filter(paragraph => paragraph !== ""),
-		date: new Date(),
-		authorID: new ObjectID(request.authnData.userID)
-	}, (error, result) => {
-		if (error) return next(error)
-		if (!result.result.ok) return next(new errors.RequestHandlingError(500, 'Failed to insert a new article!'))
+		const info = await request.app.locals.articles.addArticle(articleData)
+		if (!info.result.ok) throw new errors.RequestHandlingError(500, 'Failed to insert a new article!')
 
-		return response.send({_id: result.insertedId})
-	})
+		return response.send({_id: info.insertedId})
+	} catch(error) {
+		return next(error)
+	}
 })
 
-router.get('/articles/article-:id', (request, response, next) => {
-	const db = request.app.locals.db
-
-	db.collection('articles').findOne({_id: new ObjectID(request.params.id)}, (error, article) => {
-		if (error) return next(error)
-		if (!article) return next(new errors.ArticleNotFound(request.params.id))
+router.get('/articles/article-:id', async (request, response, next) => {
+	try {
+		const article = await request.app.locals.articles.getArticle(request.params.id)
+		if (!article) throw new errors.ArticleNotFound(request.params.id)
 
 		return response.send(article)
-	})
+	} catch(error) {
+		return next(error)
+	}
+})
+
+
+/**
+ * @todo Implement.
+ */
+
+router.get('/articles/article-:id/data', async (request, response, next) => {
+
 })
 
 router.post('/articles/article-:id/edit', authz, (request, response, next) => {
-	const db = request.app.locals.db
+	try {
+		const info = request.app.locals.articles.editArticle(request.params.id, request.body)
 
-	db.collection('articles').updateOne({
-		_id: new ObjectID(request.params.id)
-	}, {
-		$set: request.body
-	}, (error, result) => {
-		if (error) return next(error)
-		if (result.matchedCount !== 1) return next(new errors.ArticleNotFound(request.params.id))
+		if (info.matchedCount !== 1) throw new errors.ArticleNotFound(request.params.id)
 
 		return response.status(204).end()
-	})
+	} catch (error) {
+		return next(error)
+	}
 })
+
+
+/**
+ * @todo Implement.
+ */
+
+router.get('/articles/article-:id/reviews', async (request, response, next) => {
+
+})
+
+
+/**
+ * @todo Extract DB code to separate module.
+ */
 
 router.post('/articles/article-:id/add-review', authz, async (request, response, next) => {
 	const db = request.app.locals.db
-
-	const today = new Date()
 
 	/**
 	 * @todo Validate data.
 	 */
 
 	db.collection('articles').updateOne({
-		_id: new ObjectID(request.params.id)
+		_id: new mongodb.ObjectID(request.params.id)
 	}, {
 		$push: {
 			reviews: {
-				author: new ObjectID(request.authnData.userID),
+				author: new mongodb.ObjectID(request.authnData.userID),
 				date: new Date(),
 				rating: request.body.rating,
 				title: request.body.title,

@@ -1,3 +1,7 @@
+/**
+ * @todo Document.
+ */
+
 const cors = require('cors')
 const bodyParser = require('body-parser')
 const cookieParser = require('cookie-parser')
@@ -6,6 +10,8 @@ const server = require('express')()
 
 const config = require('./config')
 const errorHandlers = require('./utils/errorHandlers')
+
+const db = require('./db')
 
 
 /*
@@ -47,6 +53,7 @@ client.connect(error => {
 	if (error) return console.error(error)
 
 	server.locals.db = client.db("on-this-day")
+	server.locals.articles = new db.articles(server.locals.db.collection('articles'))
 
 	server.listen(3003, () => {
 		console.log("HTTP server listening on http://localhost:3003.")
