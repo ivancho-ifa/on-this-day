@@ -1,4 +1,8 @@
-class RequestHandlingError extends Error {
+/**
+ * @todo Document.
+ */
+
+ class RequestHandlingError extends Error {
 	constructor(status, ...params) {
 		super(...params)
 

@@ -1,4 +1,8 @@
-const bcrypt = require('bcrypt')
+/**
+ * @todo Document.
+ */
+
+ const bcrypt = require('bcrypt')
 const jwt = require('jsonwebtoken')
 
 

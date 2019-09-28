@@ -1,5 +1,7 @@
-const saltRounds = 10
+/**
+ * @todo Document.
+ */
 
 module.exports = {
-	saltRounds
+	saltRounds: 10
 }

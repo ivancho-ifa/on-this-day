@@ -1,4 +1,8 @@
-const router = require('express').Router()
+/**
+ * @todo Document.
+ */
+
+ const router = require('express').Router()
 const ObjectID = require('mongodb').ObjectID
 
 const authz = require('./utils/authz')

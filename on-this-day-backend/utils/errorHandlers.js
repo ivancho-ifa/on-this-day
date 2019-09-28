@@ -1,4 +1,8 @@
-function log (error, request, response, next) {
+/**
+ * @todo Document.
+ */
+
+ function log (error, request, response, next) {
 	console.error(error)
 
 	next(error)
